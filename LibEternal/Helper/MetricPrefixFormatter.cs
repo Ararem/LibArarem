@@ -1,3 +1,4 @@
+using LibEternal.JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 
@@ -15,6 +16,7 @@ namespace LibEternal.Helper
 	/// (19000).ToString(new MetricPrefixFormatter());      //19k
 	/// </code>
 	/// </example>
+	[PublicAPI]
 	public class MetricPrefixFormatter : IFormatProvider, ICustomFormatter
 	{
 		private readonly Dictionary<double, string> notationSymbols = new Dictionary<double, string>
@@ -40,16 +42,31 @@ namespace LibEternal.Helper
 		};
 
 		/// <inheritdoc />
-		public string Format(string format, object arg, IFormatProvider formatProvider)
+		public string Format(string format, object arg, IFormatProvider formatProvider = null)
 		{
 			double value = Convert.ToDouble(arg);
-        
-			double exponent = Math.Log10(Math.Abs(value));
-			double engExponent = Math.Floor(exponent / 3) * 3;
 
-			string symbol = notationSymbols.ContainsKey(engExponent) ? notationSymbols[engExponent] : "e" + engExponent;
+			return Format(value, format, formatProvider);
+		}
+		
+		/// <inheritdoc cref="Format(string,object,System.IFormatProvider)"/>
+		public string Format(double value, string format = "", IFormatProvider formatProvider = null)
+		{
+			//Prevent recursive loops
+			if (formatProvider is MetricPrefixFormatter) formatProvider = null;
+			
+			//Gets the rounded third log (cubed log??) idk how to explain it better
+			double key = Math.Floor(Math.Log10(Math.Abs(value)) / 3) * 3;
 
-			return (value * Math.Pow(10, (int)-engExponent)) + symbol;
+			//Try get the value from the dictionary
+			if (!notationSymbols.TryGetValue(key, out string postfix))
+				//If not just use scientific notation
+				postfix = "e" + key;
+
+			//Shrink it down to the range < ±1000;
+			//Max is ±999.999999999... etc
+			value *= Math.Pow(10, (int) -key);
+			return $"{value.ToString(format, formatProvider)} {postfix}";
 		}
 
 		/// <inheritdoc />
