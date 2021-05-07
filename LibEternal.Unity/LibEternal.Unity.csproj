@@ -22,13 +22,13 @@
 
     <ItemGroup>
       <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>E:\Programs\Unity Editors\2020.3.3f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
+        <HintPath>E:\Programs\Unity Editors\2021.1.4f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>E:\Programs\Unity Editors\2020.3.3f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+        <HintPath>E:\Programs\Unity Editors\2021.1.4f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>E:\Programs\Unity Editors\2020.3.3f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
+        <HintPath>E:\Programs\Unity Editors\2021.1.4f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
       </Reference>
     </ItemGroup>
 
