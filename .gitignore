@@ -353,11 +353,3 @@ MigrationBackup/
 /.idea
 
 #Manually ignored (misc)
-LibEternal/Callbacks/Generic/SafeAction.cs
-LibEternal/Callbacks/Generic/SafeAction`0.cs
-LibEternal/Callbacks/Generic/SafeAction`1.cs
-LibEternal/Callbacks/Generic/SafeAction`2.cs
-LibEternal/Callbacks/Generic/SafeFunc`0.cs
-LibEternal/Callbacks/Generic/SafeFunc`1.cs
-LibEternal/Callbacks/Generic/SafeFunc`2.cs
-LibEternal/Callbacks/Generic/SafeFunc.cs
