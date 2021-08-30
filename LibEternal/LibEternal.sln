@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal", "LibEternal\Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.SourceGenerators", "LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj", "{9942C558-7B87-4275-968E-73A113A7D22B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.Generated", "LibEternal.Generated\LibEternal.Generated.csproj", "{294CBA34-4536-468E-B3A7-18731749F8EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{9942C558-7B87-4275-968E-73A113A7D22B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9942C558-7B87-4275-968E-73A113A7D22B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9942C558-7B87-4275-968E-73A113A7D22B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{294CBA34-4536-468E-B3A7-18731749F8EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{294CBA34-4536-468E-B3A7-18731749F8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{294CBA34-4536-468E-B3A7-18731749F8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{294CBA34-4536-468E-B3A7-18731749F8EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
