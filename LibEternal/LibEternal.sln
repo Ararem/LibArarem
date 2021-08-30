@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal", "LibEternal\LibEternal.csproj", "{E1A5D404-0C04-4ECC-941C-AEE449BDE2F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.SourceGenerators", "LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj", "{55C8EAD8-E9CE-4526-BFAC-C189C6368692}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrideSaber.SourceGenerators", "StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.csproj", "{9942C558-7B87-4275-968E-73A113A7D22B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{E1A5D404-0C04-4ECC-941C-AEE449BDE2F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1A5D404-0C04-4ECC-941C-AEE449BDE2F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1A5D404-0C04-4ECC-941C-AEE449BDE2F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55C8EAD8-E9CE-4526-BFAC-C189C6368692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55C8EAD8-E9CE-4526-BFAC-C189C6368692}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55C8EAD8-E9CE-4526-BFAC-C189C6368692}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55C8EAD8-E9CE-4526-BFAC-C189C6368692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9942C558-7B87-4275-968E-73A113A7D22B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9942C558-7B87-4275-968E-73A113A7D22B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9942C558-7B87-4275-968E-73A113A7D22B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9942C558-7B87-4275-968E-73A113A7D22B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
