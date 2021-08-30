@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace StrideSaber.SourceGenerators.Helper
+namespace LibEternal.SourceGenerators.Helper
 {
 	public static class DocumentationHelper
 	{

@@ -8,10 +8,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using static Microsoft.CodeAnalysis.MethodKind;
-using static StrideSaber.SourceGenerators.Helper.DocumentationHelper;
-using static StrideSaber.SourceGenerators.Helper.GenericHelper;
+using static LibEternal.SourceGenerators.Helper.DocumentationHelper;
+using static LibEternal.SourceGenerators.Helper.GenericHelper;
 
-namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
+namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 {
 	/// <inheritdoc/>
 	[Generator]

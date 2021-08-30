@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
-namespace StrideSaber.SourceGenerators.Helper
+namespace LibEternal.SourceGenerators.Helper
 {
 	public static class GenericHelper
 	{
