@@ -2,8 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="36c8ac32-eed0-4e89-8a17-d630d3d7625c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/LibEternal/Logging/Enrichers/DemystifiedExceptionsEnricher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LibEternal/Logging/Enrichers/EventLevelIndentEnricher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LibEternal/Logging/Enrichers/LogEventNumberEnricher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LibEternal/Logging/Enrichers/SourceContextEnricher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LibEternal/Logging/Enrichers/StackTraceEnricher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LibEternal/Logging/Enrichers/ThreadInfoEnricher.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LibEternal/ObjectPools/StringBuilderPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.LibEternal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LibEternal/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LibEternal.Generated/LibEternal.Generated.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.Generated/LibEternal.Generated.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal.Generated/StaticInstGenClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.Generated/StaticInstGenClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal/Class1.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal/LibEternal.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal/LibEternal.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,17 +26,24 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/LibEternal.Generated/Class1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/LibEternal.Generated/StaticInstGenClass.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/LibEternal.Generated/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/SourceGenLog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/527da46b/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/d75b646f/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/LibEternal.Generated/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/StaticInstGenClass__Static.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/LibEternal.SourceGenerators/Class1.cs" />
-      <option value="$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" />
       <option value="$PROJECT_DIR$/LibEternal.SuperCore/Class1.cs" />
-      <option value="$PROJECT_DIR$/LibEternal.Generated/Class1.cs" />
       <option value="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" />
       <option value="$PROJECT_DIR$/LibEternal.Generated/LibEternal.Generated.csproj" />
+      <option value="$PROJECT_DIR$/LibEternal.Generated/Class1.cs" />
+      <option value="$PROJECT_DIR$/LibEternal/Logging/Enrichers/ThreadInfoEnricher.cs" />
+      <option value="$PROJECT_DIR$/LibEternal.Generated/StaticInstGenClass.cs" />
+      <option value="$PROJECT_DIR$/LibEternal/ObjectPools/StringBuilderPool.cs" />
+      <option value="$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1xT2CezLoLPOLR1CkkDanktUMnf" />
@@ -48,7 +67,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1630364634325</updated>
-      <workItem from="1630364685916" duration="1688000" />
+      <workItem from="1630364685916" duration="6366000" />
     </task>
     <servers />
   </component>

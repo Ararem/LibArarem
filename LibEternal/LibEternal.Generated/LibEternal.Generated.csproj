@@ -13,6 +13,14 @@
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>CompilerGenerated</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	  <DebugType>full</DebugType>
+	  <DocumentationFile>bin\Debug\LibEternal.Generated.xml</DocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+	  <DebugSymbols>true</DebugSymbols>
+	  <DocumentationFile>bin\Release\LibEternal.Generated.xml</DocumentationFile>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- Don't include the output from a previous source generator execution into future runs; the */** trick here ensures that there's

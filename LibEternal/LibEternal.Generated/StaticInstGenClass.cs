@@ -13,7 +13,7 @@ namespace LibEternal.Generated
 	///  Test XML docs lol
 	/// </summary>
 	[GenerateStaticInstanceMembers("StrideSaber.Testing.Generated", "Static", "Instance")]
-	public class StaticInstGenClass<T> where T : notnull
+	public class StaticInstGenClass//<T> where T : notnull
 	{
 	#region Simple stuff
 
