@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.SourceGenerators", "LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj", "{9942C558-7B87-4275-968E-73A113A7D22B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.Generated", "LibEternal.Generated\LibEternal.Generated.csproj", "{294CBA34-4536-468E-B3A7-18731749F8EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal", "LibEternal\LibEternal.csproj", "{294CBA34-4536-468E-B3A7-18731749F8EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
