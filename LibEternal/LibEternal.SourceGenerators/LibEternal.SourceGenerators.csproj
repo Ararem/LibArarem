@@ -19,13 +19,12 @@
 	  <DocumentationFile>bin\Release\LibEternal.SourceGenerators.xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.10.0" PrivateAssets="All" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\LibEternal\LibEternal.csproj" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.0-preview.7.21378.6" />
 	</ItemGroup>
 </Project>

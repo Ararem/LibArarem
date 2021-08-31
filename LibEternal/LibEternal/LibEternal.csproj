@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -13,10 +14,6 @@
 	  <DebugSymbols>true</DebugSymbols>
 	  <DocumentationFile>bin\Release\LibEternal.xml</DocumentationFile>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Folder Include="Logging" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Ben.Demystifier" Version="0.4.1" />

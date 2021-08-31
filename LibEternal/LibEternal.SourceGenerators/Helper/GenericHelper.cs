@@ -19,7 +19,11 @@ namespace LibEternal.SourceGenerators.Helper
 		public static string BuildGenericTypeArgs(ImmutableArray<ITypeParameterSymbol> typeParameters)
 		{
 			if (typeParameters.IsDefaultOrEmpty) return string.Empty;
-			return $"<{string.Join(", ", typeParameters.Select(t => t.Name))}>";
+			StringBuilder sb = StringBuilderPool.GetPooled();
+			sb.Append('<');
+			sb.AppendJoin(", ", typeParameters.Select(t => t.Name));
+			sb.Append('>');
+			return StringBuilderPool.ToStringAndReturn(sb);
 		}
 
 		/// <summary>
@@ -30,6 +34,7 @@ namespace LibEternal.SourceGenerators.Helper
 		[MustUseReturnValue]
 		public static string BuildGenericTypeConstraints(ImmutableArray<ITypeParameterSymbol> typeParameterSymbols)
 		{
+			if (typeParameterSymbols.IsDefaultOrEmpty) return string.Empty;
 			StringBuilder sb = StringBuilderPool.GetPooled();
 			foreach (ITypeParameterSymbol param in typeParameterSymbols)
 			{
