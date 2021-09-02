@@ -14,6 +14,9 @@ namespace LibEternal.Logging.Enrichers
 		[UsedImplicitly]
 		public sealed class StackTraceEnricher : ILogEventEnricher
 		{
+			/// <summary>
+			/// The name used for the generated property passed into serilog
+			/// </summary>
 			private const string StackTracePropertyName = "StackTrace";
 
 			/// <inheritdoc />
@@ -22,6 +25,9 @@ namespace LibEternal.Logging.Enrichers
 				logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(StackTracePropertyName, GetStackTraceString()));
 			}
 
+			/// <summary>
+			/// Gets the stack trace as a string
+			/// </summary>
 			[NotNull]
 			private static string GetStackTraceString()
 			{
@@ -30,10 +36,14 @@ namespace LibEternal.Logging.Enrichers
 				// string s = new string('=', 10);
 				// return $"\n{s} STACKTRACE START {s}\n{GetStackTrace()?.ToString() ?? "<Error getting stacktrace>"}\n{s}  STACKTRACE  END  {s}\n";
 
-				string s = new string('=', 32);
+				string s = new('=', 32);
 				return $"\n{s}\n{GetStackTrace()?.ToString() ?? "<Error getting stacktrace>"}\n{s}";
 			}
 
+			/// <summary>
+			/// Returns an enhanced stack trace, skipping serilog methods
+			/// </summary>
+			/// <returns></returns>
 			[CanBeNull]
 			// ReSharper disable once CognitiveComplexity
 			internal static EnhancedStackTrace? GetStackTrace()

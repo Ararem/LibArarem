@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using LibEternal.ObjectPools;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -8,6 +7,9 @@ using System.Text;
 
 namespace LibEternal.SourceGenerators.Helper
 {
+	/// <summary>
+	/// A helper class for dealing with source generation for generics
+	/// </summary>
 	public static class GenericHelper
 	{
 		/// <summary>
@@ -19,24 +21,31 @@ namespace LibEternal.SourceGenerators.Helper
 		public static string BuildGenericTypeArgs(ImmutableArray<ITypeParameterSymbol> typeParameters)
 		{
 			if (typeParameters.IsDefaultOrEmpty) return string.Empty;
-			StringBuilder sb = StringBuilderPool.GetPooled();
+			StringBuilder sb = new(128);
 			sb.Append('<');
-			sb.AppendJoin(", ", typeParameters.Select(t => t.Name));
+			for (int i = 0; i < typeParameters.Length; i++)
+			{
+				sb.Append(typeParameters[i].Name);
+				if (i != typeParameters.Length - 1) sb.Append(", ");
+			}
+
 			sb.Append('>');
-			return StringBuilderPool.ToStringAndReturn(sb);
+			return sb.ToString();
 		}
 
 		/// <summary>
 		/// Builds a string that holds the generic type constraints that will satisfy those of the <paramref name="typeParameterSymbols"/>
 		/// </summary>
 		/// <param name="typeParameterSymbols">A list of constraints to generate the string with</param>
-		/// <returns>A string that can be used when generating source code to constrain a set of types for a generic type or method</returns>
+		/// <param name="indent">An optional indent to apply to lines after the first (i.e. will only apply to lines 2,3,4 if 4 lines are generated)</param>
+		/// <returns>A string that can be used when generating source code to constrain a set of types for a gen/eric type or method</returns>
 		[MustUseReturnValue]
-		public static string BuildGenericTypeConstraints(ImmutableArray<ITypeParameterSymbol> typeParameterSymbols)
+		// ReSharper disable once CognitiveComplexity
+		public static string BuildGenericTypeConstraints(ImmutableArray<ITypeParameterSymbol> typeParameterSymbols, string indent = "")
 		{
 			if (typeParameterSymbols.IsDefaultOrEmpty) return string.Empty;
-			StringBuilder sb = StringBuilderPool.GetPooled();
-			foreach (ITypeParameterSymbol param in typeParameterSymbols)
+			StringBuilder sb = new(256);
+			foreach (var param in typeParameterSymbols)
 			{
 				//If it has no constraints we skip this
 				if (!param.HasConstructorConstraint && !param.HasNotNullConstraint && !param.HasReferenceTypeConstraint && !param.HasUnmanagedTypeConstraint && !param.HasValueTypeConstraint && (param.ConstraintTypes.Length == 0)) break;
@@ -51,10 +60,10 @@ namespace LibEternal.SourceGenerators.Helper
 				constraints.AddRange(param.ConstraintTypes.Select(t => $"{t}"));
 				//The new constraint has to come last
 				if (param.HasConstructorConstraint) constraints.Add("new()");
-				sb.AppendLine($"\t\t\twhere {param} : {string.Join(", ", constraints)}");
+				sb.Append($"\n{indent}where {param} : {string.Join(", ", constraints)}");
 			}
 
-			return StringBuilderPool.ToStringAndReturn(sb);
+			return sb.ToString();
 		}
 	}
 }

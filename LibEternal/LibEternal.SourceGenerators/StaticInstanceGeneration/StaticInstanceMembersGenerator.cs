@@ -51,7 +51,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 		/// <summary>
 		/// Processes a given <see cref="ITypeSymbol"/>, generating static instance members for it
 		/// </summary>
-		/// <param name="toProcess">The type that should be processed</param>
+		/// <param name="type">The type that should be processed</param>
 		/// <param name="context">The </param>
 		/// <param name="genMembersAttributeSymbol">The attribute that marks members for generation</param>
 		// ReSharper disable once SuggestBaseTypeForParameter
@@ -59,9 +59,8 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 		//One day this is going to com back and bite me, I'm sure of it
 		// ReSharper disable once CognitiveComplexity
 		// ReSharper disable once CyclomaticComplexity
-		private static void ProcessType(TypeToProcess toProcess, GeneratorExecutionContext context, INamedTypeSymbol genMembersAttributeSymbol)
+		private static void ProcessType(INamedTypeSymbol type, GeneratorExecutionContext context, INamedTypeSymbol genMembersAttributeSymbol)
 		{
-			INamedTypeSymbol type = toProcess.Type;
 			StringBuilder sb = new();
 			Log($"\nExamining type {type}");
 
@@ -99,7 +98,8 @@ namespace {newTypeNamespace}
 {{
 	//Source type is {type}
 	///{Inheritdoc(type)}
-	public partial class {newTypeName}{BuildGenericTypeArgs(type.TypeParameters)}{BuildGenericTypeConstraints(type.TypeParameters)}
+	[System.CodeDom.Compiler.GeneratedCode(""LibEternal"", ""1.0.0.0"")]
+	public static partial class {newTypeName}{BuildGenericTypeArgs(type.TypeParameters)}{BuildGenericTypeConstraints(type.TypeParameters, "\t\t\t")}
 	{{");
 			Log($"\t\tGenerating target instance '{instanceName}'");
 			sb.Append($@"
@@ -177,9 +177,9 @@ namespace {newTypeNamespace}
 						//methodDecArgs is when we declare the method: `foo(int x, int z, bar z)`
 						//TODO: Nullable stuff for parameters
 						string genericArgs = BuildGenericTypeArgs(method.TypeParameters);
-						string genericArgConstraints = BuildGenericTypeConstraints(method.TypeParameters);
+						string genericArgConstraints = method.IsGenericMethod ? BuildGenericTypeConstraints(method.TypeParameters, "\t\t\t") : string.Empty;
 						string methodCallArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
-						string methodDecArgs = string.Join(", ", method.Parameters.Select(obj => $"{obj.Type} {obj.Name}"));
+						string methodDecArgs = string.Join(", ", method.Parameters.Select(p => $"{p.Type}{(p.NullableAnnotation == NullableAnnotation.Annotated ? "?" : string.Empty)} {p.Name}"));
 
 						sb.Append($@"
 
@@ -231,12 +231,13 @@ namespace {newTypeNamespace}
 			}
 		}
 
-		private sealed record TypeToProcess(INamedTypeSymbol Type);
-
 		/// <inheritdoc/>
 		private sealed class SyntaxReceiver : ISyntaxContextReceiver
 		{
-			public readonly List<TypeToProcess> Types = new();
+			/// <summary>
+			/// The list of types that was found by the receiver
+			/// </summary>
+			public readonly List<INamedTypeSymbol> Types = new();
 
 			/// <summary>
 			///  Called for every syntax node in the compilation, we can inspect the nodes and save any information useful for generation
@@ -247,7 +248,7 @@ namespace {newTypeNamespace}
 				{
 					//Get the symbol being declared by the type
 					INamedTypeSymbol type = context.SemanticModel.GetDeclaredSymbol(typeDec)!;
-					Types.Add(new TypeToProcess(type!));
+					Types.Add(type!);
 				}
 			}
 		}
@@ -255,6 +256,8 @@ namespace {newTypeNamespace}
 	#region Diagnostic Descriptions
 
 		// ReSharper disable StringLiteralTypo
+		// ReSharper disable CommentTypo
+		// ReSharper disable InternalOrPrivateMemberNotDocumented
 
 		//SIMG stands for "Static Instance Member Generator
 		private static readonly DiagnosticDescriptor ClassIsStatic = new(
@@ -268,6 +271,8 @@ namespace {newTypeNamespace}
 
 		//TODO: Unsupported stuff diagnostics
 		// ReSharper restore StringLiteralTypo
+		// ReSharper restore CommentTypo
+		// ReSharper restore InternalOrPrivateMemberNotDocumented
 
 	#endregion
 
@@ -279,6 +284,7 @@ namespace {newTypeNamespace}
 		// ReSharper disable once InconsistentNaming
 		private static readonly List<string> _log = new();
 
+		// ReSharper disable once InternalOrPrivateMemberNotDocumented
 		private static void Log(string s)
 		{
 			lock (_log)

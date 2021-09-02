@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using LibEternal.ObjectPools;
 using Serilog.Core;
 using Serilog.Events;
 using System.Collections.Generic;
@@ -43,14 +42,11 @@ namespace LibEternal.Logging.Enrichers
 			private static string GenerateIndentString(int repetitions)
 			{
 				//Get a builder from the pool and make sure it's big enough
-				StringBuilder sb = StringBuilderPool.GetPooled();
-				sb.EnsureCapacity(IndentString.Length * repetitions);
+				StringBuilder sb = new(IndentString.Length * repetitions);
 				//Just repeat the string and return it
-				string s = sb.Insert(0, IndentString, repetitions).ToString();
-				StringBuilderPool.ReturnPooled(sb);
-				return s;
+				return sb.Insert(0, IndentString, repetitions).ToString();
 
-				// Easier to read but waay less efficient
+				// Easier to read but way less efficient
 				// return string.Concat(Enumerable.Repeat(IndentString, repetitions));
 			}
 		}

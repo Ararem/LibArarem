@@ -2,6 +2,9 @@
 
 namespace LibEternal.SourceGenerators.Helper
 {
+	/// <summary>
+	/// A helper class that helps with creating documentation
+	/// </summary>
 	public static class DocumentationHelper
 	{
 		/// <summary>
