@@ -353,3 +353,5 @@ MigrationBackup/
 /.idea
 
 #Manually ignored (misc)
+LibEternal/LibEternal/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/SourceGenLog.cs
+LibEternal/LibEternal/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/StaticInstGenClass__Static.cs

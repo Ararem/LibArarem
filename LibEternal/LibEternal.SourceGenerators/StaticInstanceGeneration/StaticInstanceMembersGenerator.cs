@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using static Microsoft.CodeAnalysis.MethodKind;
 using static LibEternal.SourceGenerators.Helper.DocumentationHelper;
@@ -69,7 +70,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 			AttributeData? genAttribute = type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, genMembersAttributeSymbol));
 			if (genAttribute is null)
 			{
-				Log("Class not marked for generation, Ignoring");
+				Log("Class not marked for generation, ignoring");
 				return;
 			}
 
@@ -98,7 +99,7 @@ namespace {newTypeNamespace}
 {{
 	//Source type is {type}
 	///{Inheritdoc(type)}
-	[System.CodeDom.Compiler.GeneratedCode(""LibEternal"", ""1.0.0.0"")]
+	[System.CodeDom.Compiler.GeneratedCode(""LibEternal.SourceGenerators"", ""{typeof(StaticInstanceMembersGenerator).Assembly.GetName().Version}"")]
 	public static partial class {newTypeName}{BuildGenericTypeArgs(type.TypeParameters)}{BuildGenericTypeConstraints(type.TypeParameters, "\t\t\t")}
 	{{");
 			Log($"\t\tGenerating target instance '{instanceName}'");

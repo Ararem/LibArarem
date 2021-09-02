@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 #pragma warning disable
 
-namespace LibEternal.Generated
+namespace LibEternal
 {
 	//ReSharper disable all
 	/// <summary>
