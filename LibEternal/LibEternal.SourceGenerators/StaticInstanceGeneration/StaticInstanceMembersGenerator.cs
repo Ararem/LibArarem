@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using static Microsoft.CodeAnalysis.MethodKind;
 using static LibEternal.SourceGenerators.Helper.DocumentationHelper;
@@ -34,18 +33,34 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 		/// <inheritdoc/>
 		public void Execute(GeneratorExecutionContext context)
 		{
+			lock (_log)
+			{
+				_log.Clear();
+			}
+
 			SyntaxReceiver receiver = (SyntaxReceiver) context.SyntaxContextReceiver!;
 			INamedTypeSymbol genMembersAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateStaticInstanceMembersAttribute).FullName!)!;
 			Log($"GenMembers Attribute Symbol is {genMembersAttributeSymbol}");
-			foreach (var type in receiver.Types) ProcessType(type, context, genMembersAttributeSymbol);
+
+			Log("Starting execution");
+			Stopwatch totalStopWatch = Stopwatch.StartNew();
+			foreach (var type in receiver.Types)
+			{
+				ProcessType(type, context, genMembersAttributeSymbol);
+			}
+
+			totalStopWatch.Stop();
+			Log("");
+			Log($"Execution complete in {totalStopWatch.Elapsed:mm':'ss'.'FF}");
 
 			//Here we write to our log file
 			lock (_log)
 			{
-				StringBuilder logBuilder = new($"===== {DateTime.Now} ====={Environment.NewLine}");
-				for (int i = 0; i < _log.Count; i++) logBuilder.AppendLine(_log[i]);
+				_log.Insert(0, $@"/*
+===== {DateTime.Now} ====={Environment.NewLine}");
+				_log.Append("*/");
+				context.AddSource("SourceGenLog", SourceText.From(_log.ToString(), Encoding.UTF8));
 				_log.Clear();
-				context.AddSource("SourceGenLog", SourceText.From($"/*{Environment.NewLine}{logBuilder}*/", Encoding.UTF8));
 			}
 		}
 
@@ -63,6 +78,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 		private static void ProcessType(INamedTypeSymbol type, GeneratorExecutionContext context, INamedTypeSymbol genMembersAttributeSymbol)
 		{
 			StringBuilder sb = new();
+			Stopwatch sw = Stopwatch.StartNew();
 			Log($"\nExamining type {type}");
 
 			//Check if it is actually something we should generate
@@ -79,7 +95,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 			//Also check for static-ness
 			if (type.IsStatic)
 			{
-				Log("\tType is static");
+				Log($"\tType is static, ignoring");
 				ReportDiagnostic(ClassIsStatic, type);
 				return;
 			}
@@ -199,10 +215,10 @@ namespace {newTypeNamespace}
 					case IMethodSymbol {MethodKind: Constructor or Destructor or StaticConstructor}:
 						Log($"\t\tIgnoring con/destructor      {member}");
 						break;
-					case IMethodSymbol { MethodKind:MethodKind.Conversion or BuiltinOperator or UserDefinedOperator}:
+					case IMethodSymbol {MethodKind: MethodKind.Conversion or BuiltinOperator or UserDefinedOperator}:
 						Log($"\t\tIgnoring conversion/operator {member}");
 						break;
-					case IMethodSymbol { MethodKind: EventAdd or EventRaise or EventRemove or DelegateInvoke}:
+					case IMethodSymbol {MethodKind: EventAdd or EventRaise or EventRemove or DelegateInvoke}:
 						Log($"\t\tIgnoring event method        {member}");
 						break;
 					//Indexers aren't really supportable, the best we can try is create a fake property
@@ -223,6 +239,7 @@ namespace {newTypeNamespace}
 } //End namespace
 ");
 			context.AddSource($"{type.Name}__{newTypeName}", sb.ToString());
+			Log($"\tClass generation complete ({sw.Elapsed:ss'.'FF})");
 
 			void ReportDiagnostic(DiagnosticDescriptor desc, ISymbol target)
 			{
@@ -267,7 +284,8 @@ namespace {newTypeNamespace}
 						"The target class must not be static",
 						"Usage",
 						DiagnosticSeverity.Error,
-						true
+						true,
+						"The class that is marked for generation is a static class, which is unsupported (as it has no instance members). Make the class an instance class (remove the `static` modifier) to fix this error."
 				);
 
 		//TODO: Unsupported stuff diagnostics
@@ -283,14 +301,13 @@ namespace {newTypeNamespace}
 		///  Stores messages we need to log later
 		/// </summary>
 		// ReSharper disable once InconsistentNaming
-		private static readonly List<string> _log = new();
+		private static readonly StringBuilder _log = new();
 
-		// ReSharper disable once InternalOrPrivateMemberNotDocumented
 		private static void Log(string s)
 		{
 			lock (_log)
 			{
-				_log.Add(s);
+				_log.AppendLine(s);
 			}
 		}
 
