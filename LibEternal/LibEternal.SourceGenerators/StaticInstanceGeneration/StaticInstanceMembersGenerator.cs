@@ -37,7 +37,6 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 			{
 				_log.Clear();
 			}
-
 			SyntaxReceiver receiver = (SyntaxReceiver) context.SyntaxContextReceiver!;
 			INamedTypeSymbol genMembersAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateStaticInstanceMembersAttribute).FullName!)!;
 			Log($"GenMembers Attribute Symbol is {genMembersAttributeSymbol}");
