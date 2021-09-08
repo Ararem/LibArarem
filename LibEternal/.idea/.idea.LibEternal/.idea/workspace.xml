@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="36c8ac32-eed0-4e89-8a17-d630d3d7625c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LibEternal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LibEternal/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LibEternal.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal/LibEternal.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal/LibEternal.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal/StaticInstGenClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal/StaticInstGenClass.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,16 +27,15 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/527da46b/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/d75b646f/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/IL/6DADD22E-0197-42CE-80AA-EFEF99855BE0/64/7dbe1438/020000A4.il" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/SourceGenLog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/527da46b/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C6D80B58-6127-41DA-83CA-CA26D878C136/0f/62ded6bb/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/b2/91f70220/StringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6DADD22E-0197-42CE-80AA-EFEF99855BE0/1b/9a68967d/String.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/d75b646f/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal/Logging/Enrichers/EventLevelIndentEnricher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C6D80B58-6127-41DA-83CA-CA26D878C136/88/aceef8e0/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -59,6 +60,9 @@
       <option value="$PROJECT_DIR$/LibEternal/Logging/Enrichers/ThreadInfoEnricher.cs" />
       <option value="$PROJECT_DIR$/LibEternal/StaticInstGenClass.cs" />
       <option value="$PROJECT_DIR$/LibEternal.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" />
+      <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.wixproj" />
+      <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.il" />
+      <option value="$APPLICATION_CONFIG_DIR$/scratches/Test.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1xT2CezLoLPOLR1CkkDanktUMnf" />
@@ -75,8 +79,11 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="SolutionBuilderGeneralOptionsPageId" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="IL&#10;C#&#10;MSBuild" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/LibEternal.sln" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -86,11 +93,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1630364634325</updated>
-      <workItem from="1630364685916" duration="29983000" />
+      <workItem from="1630364685916" duration="30034000" />
+      <workItem from="1631056015790" duration="2923000" />
     </task>
     <servers />
   </component>
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -102,6 +110,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
