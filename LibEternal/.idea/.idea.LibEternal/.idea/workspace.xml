@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="36c8ac32-eed0-4e89-8a17-d630d3d7625c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LibEternal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LibEternal/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal.SourceGenerators/LibEternal.SourceGenerators.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LibEternal/LibEternal.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal/LibEternal.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LibEternal/StaticInstGenClass.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal/StaticInstGenClass.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibEternal/Logging/Destructurers/DelegateDestructurer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LibEternal/Logging/Destructurers/DelegateDestructurer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,17 +25,54 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/66106B63-CEB3-432D-8B39-9CEACAE7EDA3/c0/b6a92ec6/EnhancedStackTrace.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/a8/5c1c0bc5/MulticastDelegate.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/IL/6DADD22E-0197-42CE-80AA-EFEF99855BE0/64/7dbe1438/020000A4.il" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/LibEternal/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/SourceGenLog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/527da46b/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C6D80B58-6127-41DA-83CA-CA26D878C136/0f/62ded6bb/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/b2/91f70220/StringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6DADD22E-0197-42CE-80AA-EFEF99855BE0/1b/9a68967d/String.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal.SourceGenerators/Helper/GenericHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/e8/b853e7fe/RuntimeMethodInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/527da46b/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/98/423cbef2/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/436B7687-023B-4B66-BFF9-0C67EF0961AC/e3/d75b646f/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/0c/f97789f8/MethodInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C6D80B58-6127-41DA-83CA-CA26D878C136/0f/62ded6bb/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1BC366D2-BA14-4BC5-A17E-08D4F35F238B/b2/91f70220/StringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/LibEternal/Logging/Enrichers/EventLevelIndentEnricher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C6D80B58-6127-41DA-83CA-CA26D878C136/88/aceef8e0/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/LibEternal/CompilerGenerated/LibEternal.SourceGenerators/LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator/SourceGenLog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -63,6 +98,7 @@
       <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.wixproj" />
       <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.il" />
       <option value="$APPLICATION_CONFIG_DIR$/scratches/Test.cs" />
+      <option value="$PROJECT_DIR$/LibEternal/Logging/Destructurers/DelegateDestructurer.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1xT2CezLoLPOLR1CkkDanktUMnf" />
@@ -94,7 +130,7 @@
       <option name="presentableId" value="Default" />
       <updated>1630364634325</updated>
       <workItem from="1630364685916" duration="30034000" />
-      <workItem from="1631056015790" duration="2923000" />
+      <workItem from="1631056015790" duration="7780000" />
     </task>
     <servers />
   </component>

@@ -11,6 +11,7 @@ namespace LibEternal.Logging.Destructurers
 	[PublicAPI]
 	public sealed class DelegateDestructurer : IDestructuringPolicy
 	{
+		//Destructures delegates into their MethodInfos they target
 		/// <inheritdoc />
 		public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue? result)
 		{
@@ -19,19 +20,13 @@ namespace LibEternal.Logging.Destructurers
 				result = null;
 				return false;
 			}
-			if (del is MulticastDelegate multicast)
-			{
-				var delegates = multicast.GetInvocationList();
-				result = new SequenceValue(delegates.Select(m => propertyValueFactory.CreatePropertyValue(m.Method)));
-				return true;
-			}
-			//If it's not multicast we know it only has a single target, so m.MethodInfo will be accurate
-			else
-			{
-				MethodInfo m = del.Method;
-				result = propertyValueFactory.CreatePropertyValue(m);
-				return true;
-			}
+
+			var delegates = del.GetInvocationList();
+			//Don't want to treat it as a list if there's only 1 element
+			result = delegates.Length == 1
+					? propertyValueFactory.CreatePropertyValue(delegates[0].Method)
+					: propertyValueFactory.CreatePropertyValue(delegates.Select(m => m.Method));
+			return true;
 		}
 	}
 }
