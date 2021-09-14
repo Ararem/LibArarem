@@ -354,4 +354,5 @@ MigrationBackup/
 
 #Manually ignored (misc)
 LibEternal/LibEternal/CompilerGenerated/*
-LibEternal/.idea/*
+LibEternal/.idea/.idea.LibEternal/.idea/workspace.xml
+LibEternal/.idea/.idea.LibEternal/.idea/workspace.xml
