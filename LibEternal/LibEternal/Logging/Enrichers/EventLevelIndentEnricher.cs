@@ -13,7 +13,7 @@ namespace LibEternal.Logging.Enrichers
 		[UsedImplicitly]
 		public sealed class EventLevelIndentEnricher : ILogEventEnricher
 		{
-			private const string EventLevelIndentPropertyName = "LevelIndent";
+			public const string LevelIndentProp = "LevelIndent";
 
 			private const string IndentString = "\t";
 
@@ -29,16 +29,15 @@ namespace LibEternal.Logging.Enrichers
 			};
 
 			/// <inheritdoc />
-			public void Enrich([NotNull] LogEvent logEvent, [NotNull] ILogEventPropertyFactory propertyFactory)
+			public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 			{
-				logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(EventLevelIndentPropertyName, IndentLevels[logEvent.Level]));
+				logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(LevelIndentProp, IndentLevels[logEvent.Level]));
 			}
 
 			/// <summary>
 			///  Just repeats the <see cref="IndentString" /> by the amount of <paramref name="repetitions" />
 			/// </summary>
 			/// <param name="repetitions">The number of times to repeat the indent string</param>
-			[NotNull]
 			private static string GenerateIndentString(int repetitions)
 			{
 				//Get a builder from the pool and make sure it's big enough

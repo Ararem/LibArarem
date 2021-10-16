@@ -3,7 +3,6 @@ using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace LibEternal.Logging.Destructurers
 {

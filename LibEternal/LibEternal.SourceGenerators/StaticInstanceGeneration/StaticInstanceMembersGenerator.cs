@@ -43,10 +43,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 
 			Log("Starting execution");
 			Stopwatch totalStopWatch = Stopwatch.StartNew();
-			foreach (var type in receiver.Types)
-			{
-				ProcessType(type, context, genMembersAttributeSymbol);
-			}
+			foreach (var type in receiver.Types) ProcessType(type, context, genMembersAttributeSymbol);
 
 			totalStopWatch.Stop();
 			Log("");
@@ -115,7 +112,7 @@ namespace {newTypeNamespace}
 	//Source type is {type}
 	///{Inheritdoc(type)}
 	[System.CodeDom.Compiler.GeneratedCode(""LibEternal.SourceGenerators"", ""{typeof(StaticInstanceMembersGenerator).Assembly.GetName().Version}"")]
-	public static partial class {newTypeName}{BuildGenericTypeArgs(type.TypeParameters)}{BuildGenericTypeConstraints(type.TypeParameters, "\t\t\t")}
+	public partial class {newTypeName}{BuildGenericTypeArgs(type.TypeParameters)}{BuildGenericTypeConstraints(type.TypeParameters, "\t\t\t")}
 	{{");
 			Log($"\t\tGenerating target instance '{instanceName}'");
 			sb.Append($@"

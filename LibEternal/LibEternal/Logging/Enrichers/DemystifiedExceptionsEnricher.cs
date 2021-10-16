@@ -13,7 +13,7 @@ namespace LibEternal.Logging.Enrichers
 		public sealed class DemystifiedExceptionsEnricher : ILogEventEnricher
 		{
 			/// <inheritdoc />
-			public void Enrich([NotNull] LogEvent logEvent, [NotNull] ILogEventPropertyFactory propertyFactory)
+			public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 			{
 				logEvent.Exception?.Demystify();
 			}

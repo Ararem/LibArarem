@@ -12,18 +12,16 @@ namespace LibEternal.Logging.Enrichers
 	[UsedImplicitly]
 	public sealed class ThreadInfoEnricher : ILogEventEnricher
 	{
-		// ReSharper disable InternalOrPrivateMemberNotDocumented
-		private const string ThreadNamePropertyName = "ThreadName";
-		private const string ThreadIdPropertyName   = "ThreadId";
-		private const string ThreadTypePropertyName = "ThreadType";
-		// ReSharper restore InternalOrPrivateMemberNotDocumented
+		public const string ThreadNameProp = "ThreadName";
+		public const string ThreadIdProp   = "ThreadId";
+		public const string ThreadTypeProp = "ThreadType";
 
 		/// <inheritdoc />
 		public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 		{
 			Thread curr = Thread.CurrentThread;
-			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadNamePropertyName, curr.Name ?? "Unnamed Thread"));
-			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadIdPropertyName, curr.ManagedThreadId));
+			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadNameProp, curr.Name ?? "Unnamed Thread"));
+			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadIdProp, curr.ManagedThreadId));
 			string threadType;
 			// if (MicroThread.Current is not null)
 			// threadType = "MicroThread";
@@ -35,7 +33,7 @@ namespace LibEternal.Logging.Enrichers
 			//Default is user thread
 			else
 				threadType = "User Thread";
-			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadTypePropertyName, threadType));
+			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadTypeProp, threadType));
 		}
 	}
 }

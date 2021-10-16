@@ -6,7 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
+	  <ProjectReference Include="..\LibEternal.SourceGenerators.Attributes\LibEternal.SourceGenerators.Attributes.csproj" />
+	  <ProjectReference Include="..\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
 	</ItemGroup>
 
 	<!-- This lets us write the analyzer logs to file -->
