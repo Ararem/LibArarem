@@ -94,7 +94,7 @@ namespace LibEternal.Logging.Enrichers
 			switch (perfMode)
 			{
 				case PerfMode.FastNoTrace:
-					EnrichFastReuseOld(logEvent, propertyFactory);
+					EnrichFast(logEvent, propertyFactory);
 					break;
 				case PerfMode.SlowWithTrace:
 					EnrichSlowFullTrace(logEvent, propertyFactory);
@@ -102,14 +102,12 @@ namespace LibEternal.Logging.Enrichers
 			}
 		}
 
-		private static void EnrichFastReuseOld(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+		private static void EnrichFast(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 		{
 			MethodBase? callerMethod = null;
 			Type? callerType = null;
 			{
-				//Find how far we need to go to skip all the serilog methods
-				var frames = new StackTrace().GetFrames(); //TODO: LIST.INDEXOF
-
+				var frames = new StackTrace().GetFrames();
 				bool gotToSerilogYet = false;
 				for (int i = 0; i < frames.Length; i++)
 				{
@@ -135,13 +133,6 @@ namespace LibEternal.Logging.Enrichers
 
 			//Now do the actual enriching
 			string callingMethodStr = callerMethod?.Name ?? "<Method Error>";
-
-			/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
-			* From https://stackoverflow.com/a/35266094
-			* If the MemberInfo object is a global member
-			* (that is, if it was obtained from the Module.GetMethods method, which returns global methods on a module),
-			* the returned DeclaringType will be null.
-			*/
 			string callingTypeStr = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
 
 			logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeProp, callingTypeStr));
