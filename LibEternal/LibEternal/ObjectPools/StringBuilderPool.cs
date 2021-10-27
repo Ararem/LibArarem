@@ -128,8 +128,17 @@ namespace LibEternal.ObjectPools
 		}
 
 		//Stats
+		/// <summary>
+		/// The number of <see cref="StringBuilder"/>s that were returned after use
+		/// </summary>
 		public ulong BuildersReturned;
+		/// <summary>
+		/// The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
+		/// </summary>
 		public ulong BuildersCreated;
+		/// <summary>
+		/// The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
+		/// </summary>
 		public ulong BuildersDiscarded;
 	}
 }

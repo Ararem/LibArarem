@@ -1,13 +1,18 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 
 namespace LibEternal.ObjectPools
 {
 	/// <summary>
 	/// The base class for implementing a thread-safe object pool
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public abstract class ConcurrentObjectPoolBase<T>
-	{
+	/// <typeparam name="T">The type of object to pool for</typeparam>
+	public abstract class ConcurrentObjectPoolBase<T> : IDisposable
+    {
+		/// <summary>
+		/// Gets an item of type <typeparamref name="T"/>
+		/// </summary>
+		/// <returns>A cached object, or a new one if the cache was empty</returns>
 		public virtual T Get()
 		{
 			return cache.TryTake(out T? item) ? item : CreateNew();
@@ -46,5 +51,12 @@ namespace LibEternal.ObjectPools
 			//ReSharper disable once VirtualMemberCallInConstructor
 			while(cache.Count != maxStored) cache.Add(CreateNew());
 		}
-	}
+
+		/// <inheritdoc />
+		public void Dispose()
+        {
+            cache.Dispose();
+            GC.SuppressFinalize(this);
+        }
+    }
 }
