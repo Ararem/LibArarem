@@ -13,6 +13,9 @@ namespace LibEternal.Logging.Enrichers
 		[UsedImplicitly]
 		public sealed class EventLevelIndentEnricher : ILogEventEnricher
 		{
+			/// <summary>
+			/// The name of the property for the level-based indent
+			/// </summary>
 			public const string LevelIndentProp = "LevelIndent";
 
 			private const string IndentString = "\t";

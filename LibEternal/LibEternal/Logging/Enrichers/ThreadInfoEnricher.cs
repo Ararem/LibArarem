@@ -12,8 +12,17 @@ namespace LibEternal.Logging.Enrichers
 	[UsedImplicitly]
 	public sealed class ThreadInfoEnricher : ILogEventEnricher
 	{
+		/// <summary>
+		/// The name of the property for the thread name
+		/// </summary>
 		public const string ThreadNameProp = "ThreadName";
+		/// <summary>
+		/// The name of the property for the thread ID
+		/// </summary>
 		public const string ThreadIdProp   = "ThreadId";
+		/// <summary>
+		/// The name of the property for the thread type
+		/// </summary>
 		public const string ThreadTypeProp = "ThreadType";
 
 		/// <inheritdoc />

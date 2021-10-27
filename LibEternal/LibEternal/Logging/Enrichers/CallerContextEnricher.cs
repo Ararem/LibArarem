@@ -7,7 +7,6 @@ using Serilog.Events;
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 
 namespace LibEternal.Logging.Enrichers
 {
@@ -43,12 +42,116 @@ namespace LibEternal.Logging.Enrichers
 	[UsedImplicitly]
 	public sealed class CallerContextEnricher : ILogEventEnricher
 	{
+		/// <summary>
+		/// An enum specifying what performance mode to use (use to control if you want lots of information, or performance)
+		/// </summary>
+		public enum PerfMode
+		{
+			/// <summary>
+			/// Enriches with a proper <see cref="StackTrace"/>, but is VERY slow
+			/// </summary>
+			SlowWithTrace,
+
+			/// <summary>
+			/// Enriches much faster, without including a full <see cref="StackTrace"/>. Almost 20x faster than <see cref="SlowWithTrace"/> and allocates ~9% of the memory
+			/// </summary>
+			FastNoTrace,
+		}
+
+		/// <summary>
+		///  The name of the property for the calling type
+		/// </summary>
 		public const string CallingTypeProp = "CallingType";
+
+		/// <summary>
+		///  The name of the property for the stack trace
+		/// </summary>
 		public const string StackTraceProp = "StackTrace";
+
+		/// <summary>
+		///  The name of the property for the calling method
+		/// </summary>
 		public const string CallingMethodProp = "CallingMethod";
+
+		private readonly PerfMode perfMode;
+
+		/// <summary>
+		///  Constructs a new instance of this type
+		/// </summary>
+		/// <param name="perfMode">
+		///  An optional enum argument that when set to <see cref="PerfMode.FastNoTrace"/> greatly increasing performance by disabling stack trace demystifying. This should only be used if the stack trace is not going
+		///  to be displayed, only the other properties.
+		/// </param>
+		public CallerContextEnricher(PerfMode perfMode = PerfMode.SlowWithTrace)
+		{
+			this.perfMode = perfMode;
+		}
 
 		/// <inheritdoc/>
 		public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+		{
+			// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+			switch (perfMode)
+			{
+				case PerfMode.FastNoTrace:
+					EnrichFastReuseOld(logEvent, propertyFactory);
+					break;
+				case PerfMode.SlowWithTrace:
+					EnrichSlowFullTrace(logEvent, propertyFactory);
+					break;
+			}
+		}
+
+		private static void EnrichFastReuseOld(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+		{
+			MethodBase? callerMethod = null;
+			Type? callerType = null;
+			{
+				//Find how far we need to go to skip all the serilog methods
+				var frames = new StackTrace().GetFrames(); //TODO: LIST.INDEXOF
+
+				bool gotToSerilogYet = false;
+				for (int i = 0; i < frames.Length; i++)
+				{
+					callerMethod = frames[i].GetMethod();
+					callerType = callerMethod?.DeclaringType;
+					bool isSerilog = callerType?.Namespace?.StartsWith("Serilog") ?? false;
+					switch (gotToSerilogYet)
+					{
+						case false when !isSerilog:
+							continue;
+						case false:
+							gotToSerilogYet = true;
+							continue;
+					}
+
+					if (isSerilog) continue;
+
+					//Finally found the right number
+					//https://youtu.be/Vy7RaQUmOzE?t=203
+					break;
+				}
+			}
+
+			//Now do the actual enriching
+			string callingMethodStr = callerMethod?.Name ?? "<Method Error>";
+
+			/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
+			* From https://stackoverflow.com/a/35266094
+			* If the MemberInfo object is a global member
+			* (that is, if it was obtained from the Module.GetMethods method, which returns global methods on a module),
+			* the returned DeclaringType will be null.
+			*/
+			string callingTypeStr = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
+
+			logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeProp, callingTypeStr));
+			logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodProp, callingMethodStr));
+			logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp, "<<<ERROR: STACKTRACE DISABLED FOR PERFORMANCE>>>"));
+		}
+
+	#region Slow Enriching
+
+		private static void EnrichSlowFullTrace(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 		{
 			EnhancedStackTrace? trace = GetStackTrace();
 			string callingTypeStr, callingMethodStr, stackTraceStr;
@@ -62,9 +165,7 @@ namespace LibEternal.Logging.Enrichers
 				ResolvedMethod callerMethod = callerFrame.MethodInfo;
 				Type? callerType = callerMethod.DeclaringType;
 
-				StringBuilder sb = StringBuilderPool.GetPooled();
-				callerMethod.Append(sb, false);
-				callingMethodStr = sb.ToString();
+				callingMethodStr = callerMethod.Name!;
 
 				/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
 				* From https://stackoverflow.com/a/35266094
@@ -72,7 +173,7 @@ namespace LibEternal.Logging.Enrichers
 				* (that is, if it was obtained from the Module.GetMethods method, which returns global methods on a module),
 				* the returned DeclaringType will be null.
 				*/
-				callingTypeStr = callerType is null ? "<Module>" : sb.Clear().AppendTypeDisplayName(callerType, false, true).ToString();
+				callingTypeStr = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
 
 				stackTraceStr = trace.ToString();
 			}
@@ -85,23 +186,22 @@ namespace LibEternal.Logging.Enrichers
 		/// <summary>
 		///  Returns an enhanced stack trace, skipping serilog methods
 		/// </summary>
-		internal static EnhancedStackTrace? GetStackTrace()
+		private static EnhancedStackTrace? GetStackTrace()
 		{
 			/*
-			 * Example output:
-			 * This >>>>		at void Core.Logging.StackTraceEnricher.GetStackTrace() in C:/Users/XXXXX/Documents/Projects/Unity/Team-Defense/Assets/Scripts/Core/Logging/StackTraceEnricher.cs:line 149
-			 * 					at void Serilog.Enrichers.FunctionEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-			 * 					at void Serilog.Core.Enrichers.SafeAggregateEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-			 * 					at void Serilog.Core.Logger.Dispatch(LogEvent logEvent)
-			 * 					at void Serilog.Core.Logger.Write(LogEventLevel level, Exception exception, string messageTemplate, params object[] propertyValues)
-			 * 					at void Serilog.Core.Logger.Write(LogEventLevel level, string messageTemplate, params object[] propertyValues)
-			 * 					at void Serilog.Core.Logger.Write(LogEventLevel level, string messageTemplate)
-			 * 					at void Serilog.Log.Write(LogEventLevel level, string messageTemplate)
-			 * 					at void Serilog.Log.Information(string messageTemplate)
-			 * Logged >>>		at void Testing.TestBehaviour.Test() in C:/Users/XXXXX/Documents/Projects/Unity/Team-Defense/Assets/Scripts/Testing/TestBehaviour.cs:line 43
-			 *
-			 * Here we can see we need to skip 9 frames to avoid including the serilog stuff.
-			 */
+		 * Example output:
+		 * This >>>>		at void LibEternal.Logging.Enrichers.CallerContextEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+		 * 					at void Serilog.Core.Enrichers.SafeAggregateEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+		 * 					at void Serilog.Core.Logger.Dispatch(LogEvent logEvent)
+		 * 					at void Serilog.Core.Logger.Write(LogEventLevel level, Exception exception, string messageTemplate, params object[] propertyValues)
+		 * 					at void Serilog.Core.Logger.Write(LogEventLevel level, string messageTemplate, params object[] propertyValues)
+		 * 					at void Serilog.Core.Logger.Write(LogEventLevel level, string messageTemplate)
+		 * 					at void Serilog.Log.Write(LogEventLevel level, string messageTemplate)
+		 * 					at void Serilog.Log.Information(string messageTemplate)
+		 * Logged >>>		at void Testing.TestBehaviour.Test()
+		 *
+		 * Here we can see we need to skip 9 frames to avoid including the serilog stuff.
+		 */
 
 			//Find how far we need to go to skip all the serilog methods
 			var frames = new StackTrace().GetFrames();
@@ -116,7 +216,7 @@ namespace LibEternal.Logging.Enrichers
 			{
 				MethodBase? method = frames[i].GetMethod();
 				//If the method, type or name is null, the expression is false
-				bool isSerilog = method?.DeclaringType?.FullName?.ToLower().Contains("serilog") ?? false;
+				bool isSerilog = method?.DeclaringType?.Namespace?.StartsWith("Serilog") ?? false;
 				//E.g. "at void Core.Logger.ReinitialiseLogger()+GetStackTrace()"
 				// ReSharper disable once ConvertIfStatementToSwitchStatement
 				if (!gotToSerilogYet && !isSerilog)
@@ -136,12 +236,13 @@ namespace LibEternal.Logging.Enrichers
 				//E.g. "at void Testing.TestBehaviour.Test()"
 				// if (gotToSerilogYet && !isSerilog)
 				//Finally found the right number
-				skip = i;
+				skip = i - 1;
 				break;
 			}
 
 			try
 			{
+				//Tis a shame that one cannot pass in the frames on their own, only create a new trace
 				return new EnhancedStackTrace(new StackTrace(skip));
 			}
 			catch (Exception e)
@@ -150,5 +251,7 @@ namespace LibEternal.Logging.Enrichers
 				return null;
 			}
 		}
+
+	#endregion
 	}
 }

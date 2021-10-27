@@ -16,6 +16,9 @@ namespace LibEternal.Logging.Enrichers
 		[UsedImplicitly]
 		public sealed class LogEventNumberEnricher : ILogEventEnricher
 		{
+			/// <summary>
+			/// The name of the property for the event number
+			/// </summary>
 			public const string EventNumberProp = "EventNumber";
 
 			private static long counter = 0;
