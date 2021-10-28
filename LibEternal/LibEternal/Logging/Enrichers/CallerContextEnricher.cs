@@ -227,7 +227,7 @@ namespace LibEternal.Logging.Enrichers
 				//E.g. "at void Testing.TestBehaviour.Test()"
 				// if (gotToSerilogYet && !isSerilog)
 				//Finally found the right number
-				skip = i - 1;
+				skip = i;
 				break;
 			}
 
