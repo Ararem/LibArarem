@@ -101,13 +101,13 @@ namespace LibEternal.ObjectPools
 
 		private StringBuilderPool() : base(MaxCount)
 		{
-			BuildersCreated = BuildersDiscarded = BuildersReturned = 0;
+			buildersCreated = buildersDiscarded = buildersReturned = 0;
 		}
 
 		/// <inheritdoc />
 		protected override StringBuilder CreateNew()
 		{
-			Interlocked.Increment(ref BuildersCreated);
+			Interlocked.Increment(ref buildersCreated);
 			return new StringBuilder(InitialCapacity);
 		}
 
@@ -117,28 +117,44 @@ namespace LibEternal.ObjectPools
 			//Only return if small enough
 			if (obj.Capacity <= MaxCapacity)
 			{
-				Interlocked.Increment(ref BuildersReturned);
+				Interlocked.Increment(ref buildersReturned);
 				obj.Clear();
 				base.Return(obj);
 			}
 			else
 			{
-				Interlocked.Increment(ref BuildersDiscarded);
+				Interlocked.Increment(ref buildersDiscarded);
 			}
 		}
 
-		//Stats
 		/// <summary>
 		/// The number of <see cref="StringBuilder"/>s that were returned after use
 		/// </summary>
-		public ulong BuildersReturned;
+		private ulong buildersReturned;
+
+		/// <summary>
+		/// The number of <see cref="StringBuilder"/>s that were returned after use
+		/// </summary>
+		public ulong BuildersReturned => buildersReturned;
+
 		/// <summary>
 		/// The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
 		/// </summary>
-		public ulong BuildersCreated;
+		private ulong buildersCreated;
+
+		/// <summary>
+		/// The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
+		/// </summary>
+		public ulong BuildersCreated => buildersCreated;
+
 		/// <summary>
 		/// The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
 		/// </summary>
-		public ulong BuildersDiscarded;
+		private ulong buildersDiscarded;
+
+		/// <summary>
+		/// The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
+		/// </summary>
+		public ulong BuildersDiscarded => buildersDiscarded;
 	}
 }

@@ -53,9 +53,9 @@ namespace LibEternal.Logging.Enrichers
 			SlowWithTrace,
 
 			/// <summary>
-			/// Enriches much faster, without including a full <see cref="StackTrace"/>. Almost 20x faster than <see cref="SlowWithTrace"/> and allocates ~9% of the memory
+			/// Enriches much faster, without including a full <see cref="StackTrace"/>. Almost 20x faster than <see cref="SlowWithTrace"/> and allocates ~9% of the memory. Methods and classes are demystified properly
 			/// </summary>
-			FastNoTrace,
+			FastDemystify,
 		}
 
 		/// <summary>
@@ -79,10 +79,10 @@ namespace LibEternal.Logging.Enrichers
 		///  Constructs a new instance of this type
 		/// </summary>
 		/// <param name="perfMode">
-		///  An optional enum argument that when set to <see cref="PerfMode.FastNoTrace"/> greatly increasing performance by disabling stack trace demystifying. This should only be used if the stack trace is not going
+		///  An enum argument that when set to <see cref="PerfMode.FastDemystify"/> greatly increasing performance by disabling stack trace demystifying. This should only be used if the stack trace is not going
 		///  to be displayed, only the other properties.
 		/// </param>
-		public CallerContextEnricher(PerfMode perfMode = PerfMode.SlowWithTrace)
+		public CallerContextEnricher(PerfMode perfMode)
 		{
 			this.perfMode = perfMode;
 		}
@@ -93,8 +93,8 @@ namespace LibEternal.Logging.Enrichers
 			// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 			switch (perfMode)
 			{
-				case PerfMode.FastNoTrace:
-					EnrichFast(logEvent, propertyFactory);
+				case PerfMode.FastDemystify:
+					EnrichFastDemystify(logEvent, propertyFactory);
 					break;
 				case PerfMode.SlowWithTrace:
 					EnrichSlowFullTrace(logEvent, propertyFactory);
@@ -102,18 +102,23 @@ namespace LibEternal.Logging.Enrichers
 			}
 		}
 
-		private static void EnrichFast(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+		private static void EnrichFastDemystify(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 		{
-			MethodBase? callerMethod = null;
+			ResolvedMethod callerMethod = null!;
 			Type? callerType = null;
 			{
 				var frames = new StackTrace().GetFrames();
 				bool gotToSerilogYet = false;
 				for (int i = 0; i < frames.Length; i++)
 				{
-					callerMethod = frames[i].GetMethod();
-					callerType = callerMethod?.DeclaringType;
-					bool isSerilog = callerType?.Namespace?.StartsWith("Serilog") ?? false;
+					MethodBase? tempCallerMethod = frames[i].GetMethod();
+
+					if (tempCallerMethod is null) continue;
+					callerMethod = EnhancedStackTrace.GetMethodDisplayString(tempCallerMethod);
+					callerType = callerMethod.DeclaringType;
+					if (callerType is null) continue;
+
+					bool isSerilog = callerType.Namespace?.StartsWith("Serilog") ?? false;
 					switch (gotToSerilogYet)
 					{
 						case false when !isSerilog:
@@ -131,8 +136,8 @@ namespace LibEternal.Logging.Enrichers
 				}
 			}
 
-			//Now do the actual enriching
-			string callingMethodStr = callerMethod?.Name ?? "<Method Error>";
+			//Now do the actual enriching, with nicer names
+			string callingMethodStr = callerMethod.Name!;
 			string callingTypeStr = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
 
 			logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeProp, callingTypeStr));
