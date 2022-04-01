@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>preview</LangVersion>
 		<IsRoslynComponent>true</IsRoslynComponent>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -38,8 +38,5 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="obj\**" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\LibEternal.SourceGenerators.Attributes\LibEternal.SourceGenerators.Attributes.csproj" PrivateAssets="All" OutputItemType="Analyzer" />
 	</ItemGroup>
 </Project>

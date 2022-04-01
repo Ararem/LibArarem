@@ -11,9 +11,6 @@ namespace LibEternal.SourceGenerators.Helper
 		/// Returns an XML inheritdoc for the symbol. Does not include the preceding triple slash ('///')
 		/// </summary>
 		/// <param name="symbol">The symbol to reference</param>
-		public static string Inheritdoc(ISymbol symbol)
-		{
-			return $@"<inheritdoc cref=""{symbol.GetDocumentationCommentId()}""/>";
-		}
+		public static string Inheritdoc(ISymbol symbol) => $@"<inheritdoc cref=""{symbol.GetDocumentationCommentId()}""/>";
 	}
 }

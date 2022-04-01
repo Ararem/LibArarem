@@ -1,22 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\LibEternal.SourceGenerators.Attributes\LibEternal.SourceGenerators.Attributes.csproj" />
-	  <ProjectReference Include="..\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+	  <!--ProjectReference Include="..\LibEternal.SourceGenerators.Attributes\LibEternal.SourceGenerators.Attributes.csproj" /-->
+	  <ProjectReference Include="..\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
 	</ItemGroup>
-
-	<!-- This lets us write the analyzer logs to file -->
-	<PropertyGroup>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-		<CompilerGeneratedFilesOutputPath>CompilerGenerated</CompilerGeneratedFilesOutputPath>
-	</PropertyGroup>
+	
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 	  <DebugType>full</DebugType>
 	  <DocumentationFile>bin\Debug\LibEternal.Generated.xml</DocumentationFile>
@@ -28,14 +24,19 @@
 	  <WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
 	</PropertyGroup>
 
+	<!-- This lets us write the analyzer logs to file -->
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>CompilerGenerated</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- Don't include the output from a previous source generator execution into future runs; the */** trick here ensures that there's
 		at least one subdirectory, which is our key that it's coming from a source generator as opposed to something that is coming from
 		some other tool. -->
 		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs" />
-		<Compile Include="CompilerGenerated\LibEternal.SourceGenerators\LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator\SourceGenLog.cs" />
-		<Compile Include="CompilerGenerated\LibEternal.SourceGenerators\LibEternal.SourceGenerators.StaticInstanceGeneration.StaticInstanceMembersGenerator\StaticInstGenClass__Static.cs" />
 		<Compile Remove="CompilerGenerated\**" />
+		<None Remove="CompilerGenerated\**" />
 	</ItemGroup>
 
 	<ItemGroup>

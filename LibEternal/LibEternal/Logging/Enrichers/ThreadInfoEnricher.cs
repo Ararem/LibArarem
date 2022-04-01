@@ -16,10 +16,12 @@ namespace LibEternal.Logging.Enrichers
 		/// The name of the property for the thread name
 		/// </summary>
 		public const string ThreadNameProp = "ThreadName";
+
 		/// <summary>
 		/// The name of the property for the thread ID
 		/// </summary>
-		public const string ThreadIdProp   = "ThreadId";
+		public const string ThreadIdProp = "ThreadId";
+
 		/// <summary>
 		/// The name of the property for the thread type
 		/// </summary>
@@ -30,18 +32,8 @@ namespace LibEternal.Logging.Enrichers
 		{
 			Thread curr = Thread.CurrentThread;
 			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadNameProp, curr.Name ?? "Unnamed Thread"));
-			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadIdProp, curr.ManagedThreadId));
-			string threadType;
-			// if (MicroThread.Current is not null)
-			// threadType = "MicroThread";
-			// ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-			if (curr.IsThreadPoolThread)
-				threadType = "Dotnet Pool";
-			// else if (ThreadPool.IsWorkedThread)
-			// threadType = "Stride Pool";
-			//Default is user thread
-			else
-				threadType = "User Thread";
+			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadIdProp,   curr.ManagedThreadId));
+			string threadType = curr.IsThreadPoolThread ? "Dotnet Pool" : "User Thread";
 			logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(ThreadTypeProp, threadType));
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using LibEternal.SourceGenerators.StaticInstanceGeneration;
+﻿using LibEternal.Generated.Testing;
+using LibEternal.SourceGenerators.StaticInstanceGeneration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,11 +9,20 @@ using System.Threading.Tasks;
 
 namespace LibEternal
 {
+	namespace Generated.Testing
+	{
+		public static partial class Static
+		{
+			//Implementation of the instance member
+			private static readonly StaticInstGenClass Instance;
+		}
+	}
+
 	//ReSharper disable all
 	/// <summary>
 	///  Test XML docs lol
 	/// </summary>
-	[GenerateStaticInstanceMembers("LibEternal.Generated.Testing", "Static", "Instance")]
+	[GenerateStaticInstanceMembers("LibEternal.Generated.Testing", nameof(Static), "Instance")]
 	public class StaticInstGenClass//<T> where T : notnull
 	{
 	#region Simple stuff
