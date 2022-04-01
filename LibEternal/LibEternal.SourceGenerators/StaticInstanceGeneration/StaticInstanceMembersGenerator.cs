@@ -17,6 +17,30 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 	[Generator]
 	public sealed class StaticInstanceMembersGenerator : ISourceGenerator
 	{
+	#region Diagnostic Descriptions
+
+		// ReSharper disable StringLiteralTypo
+		// ReSharper disable CommentTypo
+		// ReSharper disable InternalOrPrivateMemberNotDocumented
+
+		//SIMG stands for "Static Instance Member Generator
+		private static readonly DiagnosticDescriptor ClassIsStatic = new(
+				"SIMG01",
+				"Class cannot be static",
+				"The target class must not be static",
+				"Usage",
+				DiagnosticSeverity.Error,
+				true,
+				"The class that is marked for generation is a static class, which is unsupported (as it has no instance members). Make the class an instance class (remove the `static` modifier) to fix this error."
+		);
+
+		//TODO: Unsupported stuff diagnostics
+		// ReSharper restore StringLiteralTypo
+		// ReSharper restore CommentTypo
+		// ReSharper restore InternalOrPrivateMemberNotDocumented
+
+	#endregion
+
 		/// <inheritdoc/>
 		public void Initialize(GeneratorInitializationContext ctx)
 		{
@@ -37,7 +61,8 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 			{
 				_log.Clear();
 			}
-			SyntaxReceiver receiver = (SyntaxReceiver) context.SyntaxContextReceiver!;
+
+			SyntaxReceiver   receiver                  = (SyntaxReceiver)context.SyntaxContextReceiver!;
 			INamedTypeSymbol genMembersAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateStaticInstanceMembersAttribute).FullName!)!;
 			Log($"GenMembers Attribute Symbol is {genMembersAttributeSymbol}");
 
@@ -61,7 +86,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 		}
 
 		/// <summary>
-		/// Processes a given <see cref="ITypeSymbol"/>, generating static instance members for it
+		///  Processes a given <see cref="ITypeSymbol"/>, generating static instance members for it
 		/// </summary>
 		/// <param name="type">The type that should be processed</param>
 		/// <param name="context">The </param>
@@ -74,7 +99,7 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 		private static void ProcessType(INamedTypeSymbol type, GeneratorExecutionContext context, INamedTypeSymbol genMembersAttributeSymbol)
 		{
 			StringBuilder sb = new();
-			Stopwatch sw = Stopwatch.StartNew();
+			Stopwatch     sw = Stopwatch.StartNew();
 			Log($"\nExamining type {type}");
 
 			//Check if it is actually something we should generate
@@ -91,15 +116,16 @@ namespace LibEternal.SourceGenerators.StaticInstanceGeneration
 			//Also check for static-ness
 			if (type.IsStatic)
 			{
-				Log($"\tType is static, ignoring");
+				Log("\tType is static, ignoring");
 				ReportDiagnostic(ClassIsStatic, type);
 				return;
 			}
 
 			Log("\tPreparing to generate static class version:");
-			string newTypeNamespace = genAttribute.ConstructorArguments[0].Value!.ToString() ?? $"{type.ContainingNamespace}.Generated";
-			string newTypeName = genAttribute.ConstructorArguments[1].Value!.ToString() ?? $"Static_{type.Name}";
-			string instanceName = genAttribute.ConstructorArguments[2].Value!.ToString() ?? "__instance";
+			//I don't like hard-coding but what else is there to do?
+			string newTypeNamespace         = genAttribute.ConstructorArguments[0].Value!.ToString() ?? $"{type.ContainingNamespace}.Generated";
+			string newTypeName              = genAttribute.ConstructorArguments[1].Value!.ToString() ?? $"Static_{type.Name}";
+			string instanceName             = genAttribute.ConstructorArguments[2].Value!.ToString() ?? "__instance";
 			Log($"\tNamespace:\t{newTypeNamespace}");
 			Log($"\tType Name:\t{newTypeName}");
 			Log($"\tInstance:\t{instanceName}");
@@ -114,14 +140,6 @@ namespace {newTypeNamespace}
 	[System.CodeDom.Compiler.GeneratedCode(""LibEternal.SourceGenerators"", ""{typeof(StaticInstanceMembersGenerator).Assembly.GetName().Version}"")]
 	public partial class {newTypeName}{BuildGenericTypeArgs(type.TypeParameters)}{BuildGenericTypeConstraints(type.TypeParameters, "\t\t\t")}
 	{{");
-			Log($"\t\tGenerating target instance '{instanceName}'");
-			sb.Append($@"
-		/// <summary>
-		///  A roslyn source-generator generated instance that will be used as the target for static instance members
-		/// </summary>
-		[System.Runtime.CompilerServices.CompilerGenerated]
-		private static readonly {type} {instanceName} = new();");
-
 			//Now we generate a static version of each instance member
 			//Only generate public instance members
 			//TODO: Handle non-public members
@@ -131,7 +149,7 @@ namespace {newTypeNamespace}
 				switch (member)
 				{
 					//Normal (read/write fields)
-					case IFieldSymbol {IsReadOnly: false} field:
+					case IFieldSymbol { IsReadOnly: false } field:
 						Log($"\t\tGenerating read/write field  {field}");
 						sb.Append($@"
 
@@ -144,7 +162,7 @@ namespace {newTypeNamespace}
 						break;
 
 					//Readonly fields
-					case IFieldSymbol {IsReadOnly: true} field:
+					case IFieldSymbol { IsReadOnly: true } field:
 						Log($"\t\tGenerating readonly field    {field}");
 						sb.Append($@"
 
@@ -153,7 +171,7 @@ namespace {newTypeNamespace}
 						break;
 
 					//Non-indexer properties
-					case IPropertySymbol {IsIndexer: false} prop:
+					case IPropertySymbol { IsIndexer: false } prop:
 						if ((prop.GetMethod == null) && prop.SetMethod!.IsInitOnly) //It has no get method, and the set method is init only
 						{
 							Log($"\t\tIgnoring init-only property  {prop} ");
@@ -169,30 +187,30 @@ namespace {newTypeNamespace}
 						if (prop.GetMethod is not null)
 							sb.Append($@"
 			get => {instanceName}.{prop.Name};");
-						if (prop.SetMethod is {IsInitOnly: false}) //BTW We can't really make static versions of init accessors so just skip them. Also this checks for null too!
+						if (prop.SetMethod is { IsInitOnly: false }) //BTW We can't really make static versions of init accessors so just skip them. Also this checks for null too!
 							sb.Append($@"
 			set => {instanceName}.{prop.Name} = value;");
 						sb.Append(@"
 		}");
 						break;
 
-					case IMethodSymbol {MethodKind: Ordinary} method:
+					case IMethodSymbol { MethodKind: Ordinary } method:
 						Log($"\t\tGenerating normal method     {method}");
 						//Build the return type strings
 						string returnType = "";
 						if (method.IsAsync && !method.ReturnsVoid) returnType += "async "; //We don't add `async` to async void's because they're special (more like special needs)
-						else if (method.ReturnsByRefReadonly) returnType += "ref readonly ";
-						else if (method.ReturnsByRef) returnType += "ref ";
+						else if (method.ReturnsByRefReadonly) returnType      += "ref readonly ";
+						else if (method.ReturnsByRef) returnType              += "ref ";
 						returnType += method.ReturnType;
 
 						//Now build the parameters
 						//methodCallArgs is when we actually call the method: `foo(x,y,z)`
 						//methodDecArgs is when we declare the method: `foo(int x, int z, bar z)`
 						//TODO: Nullable stuff for parameters
-						string genericArgs = BuildGenericTypeArgs(method.TypeParameters);
+						string genericArgs           = BuildGenericTypeArgs(method.TypeParameters);
 						string genericArgConstraints = method.IsGenericMethod ? BuildGenericTypeConstraints(method.TypeParameters, "\t\t\t") : string.Empty;
-						string methodCallArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
-						string methodDecArgs = string.Join(", ", method.Parameters.Select(p => $"{p.Type}{(p.NullableAnnotation == NullableAnnotation.Annotated ? "?" : string.Empty)} {p.Name}"));
+						string methodCallArgs        = string.Join(", ", method.Parameters.Select(p => p.Name));
+						string methodDecArgs         = string.Join(", ", method.Parameters.Select(p => $"{p.Type}{(p.NullableAnnotation == NullableAnnotation.Annotated ? "?" : string.Empty)} {p.Name}"));
 
 						sb.Append($@"
 
@@ -204,22 +222,22 @@ namespace {newTypeNamespace}
 					//Here we handle cases that we skip, so they don't hit the default block and throw warnings
 
 					//Skip property get/set methods because (1) They're reserved, (2) We already generated the property itself above
-					case IMethodSymbol {MethodKind: PropertyGet or PropertySet}:
+					case IMethodSymbol { MethodKind: PropertyGet or PropertySet }:
 						Log($"\t\tIgnoring property get/set    {member}");
 						break;
 					//Constructors don't work in a static class lol:
-					case IMethodSymbol {MethodKind: Constructor or Destructor or StaticConstructor}:
+					case IMethodSymbol { MethodKind: Constructor or Destructor or StaticConstructor }:
 						Log($"\t\tIgnoring con/destructor      {member}");
 						break;
-					case IMethodSymbol {MethodKind: MethodKind.Conversion or BuiltinOperator or UserDefinedOperator}:
+					case IMethodSymbol { MethodKind: MethodKind.Conversion or BuiltinOperator or UserDefinedOperator }:
 						Log($"\t\tIgnoring conversion/operator {member}");
 						break;
-					case IMethodSymbol {MethodKind: EventAdd or EventRaise or EventRemove or DelegateInvoke}:
+					case IMethodSymbol { MethodKind: EventAdd or EventRaise or EventRemove or DelegateInvoke }:
 						Log($"\t\tIgnoring event method        {member}");
 						break;
 					//Indexers aren't really supportable, the best we can try is create a fake property
 					//TODO: Maybe support this?
-					case IPropertySymbol {IsIndexer: true} prop:
+					case IPropertySymbol { IsIndexer: true } prop:
 						Log($"\t\tIgnoring indexer property    {prop}");
 						break;
 
@@ -249,7 +267,7 @@ namespace {newTypeNamespace}
 		private sealed class SyntaxReceiver : ISyntaxContextReceiver
 		{
 			/// <summary>
-			/// The list of types that was found by the receiver
+			///  The list of types that was found by the receiver
 			/// </summary>
 			public readonly List<INamedTypeSymbol> Types = new();
 
@@ -262,34 +280,10 @@ namespace {newTypeNamespace}
 				{
 					//Get the symbol being declared by the type
 					INamedTypeSymbol type = context.SemanticModel.GetDeclaredSymbol(typeDec)!;
-					Types.Add(type!);
+					Types.Add(type);
 				}
 			}
 		}
-
-	#region Diagnostic Descriptions
-
-		// ReSharper disable StringLiteralTypo
-		// ReSharper disable CommentTypo
-		// ReSharper disable InternalOrPrivateMemberNotDocumented
-
-		//SIMG stands for "Static Instance Member Generator
-		private static readonly DiagnosticDescriptor ClassIsStatic = new(
-						"SIMG01",
-						"Class cannot be static",
-						"The target class must not be static",
-						"Usage",
-						DiagnosticSeverity.Error,
-						true,
-						"The class that is marked for generation is a static class, which is unsupported (as it has no instance members). Make the class an instance class (remove the `static` modifier) to fix this error."
-				);
-
-		//TODO: Unsupported stuff diagnostics
-		// ReSharper restore StringLiteralTypo
-		// ReSharper restore CommentTypo
-		// ReSharper restore InternalOrPrivateMemberNotDocumented
-
-	#endregion
 
 	#region Logging, ignore this
 
