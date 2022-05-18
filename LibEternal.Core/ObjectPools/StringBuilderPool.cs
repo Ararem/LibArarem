@@ -36,21 +36,6 @@ public sealed class StringBuilderPool : ConcurrentObjectPoolBase<StringBuilder>
 	/// </summary>
 	private static readonly StringBuilderPool Instance = new();
 
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
-	/// </summary>
-	private ulong buildersCreated;
-
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
-	/// </summary>
-	private ulong buildersDiscarded;
-
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that were returned after use
-	/// </summary>
-	private ulong buildersReturned;
-
 	private StringBuilderPool() : base(MaxCount)
 	{
 		buildersCreated = buildersDiscarded = buildersReturned = 0;
@@ -70,6 +55,21 @@ public sealed class StringBuilderPool : ConcurrentObjectPoolBase<StringBuilder>
 	///  The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
 	/// </summary>
 	public ulong BuildersDiscarded => buildersDiscarded;
+
+	/// <summary>
+	///  The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
+	/// </summary>
+	private ulong buildersCreated;
+
+	/// <summary>
+	///  The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
+	/// </summary>
+	private ulong buildersDiscarded;
+
+	/// <summary>
+	///  The number of <see cref="StringBuilder"/>s that were returned after use
+	/// </summary>
+	private ulong buildersReturned;
 
 	/// <inheritdoc cref="DefaultObjectPool{T}.Get"/>
 	[MustUseReturnValue]

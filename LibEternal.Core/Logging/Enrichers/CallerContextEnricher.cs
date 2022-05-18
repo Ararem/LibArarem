@@ -74,8 +74,6 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 	/// </summary>
 	public const string CallingMethodNameProp = "CallingMethodName";
 
-	private readonly PerfMode perfMode;
-
 	/// <summary>
 	///  Constructs a new instance of this type
 	/// </summary>
@@ -88,6 +86,8 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 	{
 		this.perfMode = perfMode;
 	}
+
+	private readonly PerfMode perfMode;
 
 	/// <inheritdoc/>
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)

@@ -11,8 +11,6 @@ namespace LibEternal.Core.ObjectPools;
 [PublicAPI]
 public abstract class ConcurrentObjectPoolBase<T> : IDisposable
 {
-	private readonly BlockingCollection<T> cache;
-
 	/// <summary>
 	///  The default constructor
 	/// </summary>
@@ -29,6 +27,8 @@ public abstract class ConcurrentObjectPoolBase<T> : IDisposable
 	///  The maximum number of items that can be stored
 	/// </summary>
 	public int MaxStored => cache.BoundedCapacity;
+
+	private readonly BlockingCollection<T> cache;
 
 	/// <inheritdoc/>
 	public void Dispose()
