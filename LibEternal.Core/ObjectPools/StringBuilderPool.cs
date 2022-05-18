@@ -16,60 +16,40 @@ namespace LibEternal.Core.ObjectPools;
 [PublicAPI]
 public sealed class StringBuilderPool : ConcurrentObjectPoolBase<StringBuilder>
 {
-	/// <summary>
-	///  The default initial capacity for when a <see cref="StringBuilder"/> is created
-	/// </summary>
+	/// <summary>The default initial capacity for when a <see cref="StringBuilder"/> is created</summary>
 	private const int InitialCapacity = 1024;
 
-	/// <summary>
-	///  The maximum size of a <see cref="StringBuilder"/> that will be accepted when returned
-	/// </summary>
+	/// <summary>The maximum size of a <see cref="StringBuilder"/> that will be accepted when returned</summary>
 	private const int MaxCapacity = 66536;
 
-	/// <summary>
-	///  The max number of <see cref="StringBuilder"/>s that will be cached
-	/// </summary>
+	/// <summary>The max number of <see cref="StringBuilder"/>s that will be cached</summary>
 	private const int MaxCount = 64;
 
-	/// <summary>
-	///  The current singleton instance of a <see cref="StringBuilderPool"/>
-	/// </summary>
+	/// <summary>The current singleton instance of a <see cref="StringBuilderPool"/></summary>
 	private static readonly StringBuilderPool Instance = new();
+
+	/// <summary>The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty</summary>
+	private ulong buildersCreated;
+
+	/// <summary>The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large</summary>
+	private ulong buildersDiscarded;
+
+	/// <summary>The number of <see cref="StringBuilder"/>s that were returned after use</summary>
+	private ulong buildersReturned;
 
 	private StringBuilderPool() : base(MaxCount)
 	{
 		buildersCreated = buildersDiscarded = buildersReturned = 0;
 	}
 
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that were returned after use
-	/// </summary>
+	/// <summary>The number of <see cref="StringBuilder"/>s that were returned after use</summary>
 	public ulong BuildersReturned => buildersReturned;
 
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
-	/// </summary>
+	/// <summary>The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty</summary>
 	public ulong BuildersCreated => buildersCreated;
 
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
-	/// </summary>
+	/// <summary>The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large</summary>
 	public ulong BuildersDiscarded => buildersDiscarded;
-
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that had to be created because the cache was empty
-	/// </summary>
-	private ulong buildersCreated;
-
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that had to be discarded because the cache was full or they were too large
-	/// </summary>
-	private ulong buildersDiscarded;
-
-	/// <summary>
-	///  The number of <see cref="StringBuilder"/>s that were returned after use
-	/// </summary>
-	private ulong buildersReturned;
 
 	/// <inheritdoc cref="DefaultObjectPool{T}.Get"/>
 	[MustUseReturnValue]
@@ -81,9 +61,7 @@ public sealed class StringBuilderPool : ConcurrentObjectPoolBase<StringBuilder>
 		Instance.Return(obj);
 	}
 
-	/// <summary>
-	///  Gets the string stored in the <see cref="StringBuilder"/> and returns it to the pool
-	/// </summary>
+	/// <summary>Gets the string stored in the <see cref="StringBuilder"/> and returns it to the pool</summary>
 	/// <seealso cref="StringBuilder.ToString()"/>
 	/// <seealso cref="ReturnPooled"/>
 	[MustUseReturnValue]
@@ -94,9 +72,7 @@ public sealed class StringBuilderPool : ConcurrentObjectPoolBase<StringBuilder>
 		return result;
 	}
 
-	/// <summary>
-	///  An inline way to borrow a builder from the pool, modify it, return it to the pool and get the return value.
-	/// </summary>
+	/// <summary>An inline way to borrow a builder from the pool, modify it, return it to the pool and get the return value.</summary>
 	/// <param name="borrowFunction">The function that will apply transformations to the <see cref="StringBuilder"/> to obtain the required output</param>
 	/// <example>
 	///  Simple:

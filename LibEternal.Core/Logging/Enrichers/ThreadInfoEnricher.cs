@@ -6,25 +6,17 @@ using System.Threading;
 namespace LibEternal.Core.Logging.Enrichers;
 
 /// <inheritdoc/>
-/// <summary>
-///  Enriches log events with information about the <see cref="System.Threading.Thread.CurrentThread"/>
-/// </summary>
+/// <summary>Enriches log events with information about the <see cref="System.Threading.Thread.CurrentThread"/></summary>
 [UsedImplicitly]
 public sealed class ThreadInfoEnricher : ILogEventEnricher
 {
-	/// <summary>
-	///  The name of the property for the thread name
-	/// </summary>
+	/// <summary>The name of the property for the thread name</summary>
 	public const string ThreadNameProp = "ThreadName";
 
-	/// <summary>
-	///  The name of the property for the thread ID
-	/// </summary>
+	/// <summary>The name of the property for the thread ID</summary>
 	public const string ThreadIdProp = "ThreadId";
 
-	/// <summary>
-	///  The name of the property for the thread type
-	/// </summary>
+	/// <summary>The name of the property for the thread type</summary>
 	public const string ThreadTypeProp = "ThreadType";
 
 	/// <inheritdoc/>

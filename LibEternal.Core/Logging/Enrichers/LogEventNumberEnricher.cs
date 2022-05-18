@@ -6,9 +6,7 @@ using System.Threading;
 namespace LibEternal.Core.Logging.Enrichers;
 
 /// <inheritdoc/>
-/// <summary>
-///  Enriches log events with a counter that counts how many log events have been logged.
-/// </summary>
+/// <summary>Enriches log events with a counter that counts how many log events have been logged.</summary>
 /// <remarks>
 ///  This class is <see cref="System.Threading.Thread"/> safe, but contains (and modifies) global state, so use with multiple
 ///  <see cref="Serilog.ILogger"/>s is not supported
@@ -16,9 +14,7 @@ namespace LibEternal.Core.Logging.Enrichers;
 [UsedImplicitly]
 public sealed class LogEventNumberEnricher : ILogEventEnricher
 {
-	/// <summary>
-	///  The name of the property for the event number
-	/// </summary>
+	/// <summary>The name of the property for the event number</summary>
 	public const string EventNumberProp = "EventNumber";
 
 	private static long counter = 0;

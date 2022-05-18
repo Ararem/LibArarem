@@ -14,8 +14,7 @@ namespace LibEternal.Core.Logging.Enrichers;
 ///  An <see cref="ILogEventEnricher"/> that applies context-related enrichment. Currently implemented context:
 ///  <list type="table">
 ///   <listheader>
-///    <description>Description</description>
-///    <term>Term</term>
+///    <description>Description</description> <term>Term</term>
 ///   </listheader>
 ///   <item>
 ///    <term>
@@ -42,14 +41,10 @@ namespace LibEternal.Core.Logging.Enrichers;
 [UsedImplicitly]
 public sealed class CallerContextEnricher : ILogEventEnricher
 {
-	/// <summary>
-	///  An enum specifying what performance mode to use (use to control if you want lots of information, or performance)
-	/// </summary>
+	/// <summary>An enum specifying what performance mode to use (use to control if you want lots of information, or performance)</summary>
 	public enum PerfMode
 	{
-		/// <summary>
-		///  Enriches with a proper <see cref="StackTrace"/>, but is VERY slow
-		/// </summary>
+		/// <summary>Enriches with a proper <see cref="StackTrace"/>, but is VERY slow</summary>
 		FullTraceSlow,
 
 		/// <summary>
@@ -59,35 +54,26 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		SingleFrameFast
 	}
 
-	/// <summary>
-	///  The name of the property for the calling type
-	/// </summary>
+	/// <summary>The name of the property for the calling type</summary>
 	public const string CallingTypeNameProp = "CallingTypeName";
 
-	/// <summary>
-	///  The name of the property for the stack trace
-	/// </summary>
+	/// <summary>The name of the property for the stack trace</summary>
 	public const string StackTraceProp = "StackTrace";
 
-	/// <summary>
-	///  The name of the property for the calling method
-	/// </summary>
+	/// <summary>The name of the property for the calling method</summary>
 	public const string CallingMethodNameProp = "CallingMethodName";
 
-	/// <summary>
-	///  Constructs a new instance of this type
-	/// </summary>
+	private readonly PerfMode perfMode;
+
+	/// <summary>Constructs a new instance of this type</summary>
 	/// <param name="perfMode">
 	///  An enum argument that when set to <see cref="PerfMode.SingleFrameFast"/> greatly increasing performance by disabling stack trace demystifying. This
-	///  should only be used if the stack trace is not going
-	///  to be displayed, only the other properties.
+	///  should only be used if the stack trace is not going to be displayed, only the other properties.
 	/// </param>
 	public CallerContextEnricher(PerfMode perfMode)
 	{
 		this.perfMode = perfMode;
 	}
-
-	private readonly PerfMode perfMode;
 
 	/// <inheritdoc/>
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
@@ -184,9 +170,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,        stackTraceStr)!);
 	}
 
-	/// <summary>
-	///  Returns an enhanced stack trace, skipping serilog methods
-	/// </summary>
+	/// <summary>Returns an enhanced stack trace, skipping serilog methods</summary>
 	private static EnhancedStackTrace? GetStackTrace()
 	{
 		/*

@@ -8,14 +8,13 @@ namespace LibEternal.Core.Logging.Enrichers;
 
 /// <inheritdoc/>
 /// <summary>
-///  Enriches an <see cref="Serilog.Events.LogEvent"/> with an indent depending upon the <see cref="Serilog.Events.LogEventLevel"/> of the log event.
+///  Enriches an <see cref="Serilog.Events.LogEvent"/> with an indent depending upon the <see cref="Serilog.Events.LogEventLevel"/> of the log
+///  event.
 /// </summary>
 [UsedImplicitly]
 public sealed class EventLevelIndentEnricher : ILogEventEnricher
 {
-	/// <summary>
-	///  The name of the property for the level-based indent
-	/// </summary>
+	/// <summary>The name of the property for the level-based indent</summary>
 	public const string LevelIndentProp = "LevelIndent";
 
 	private const string IndentString = "  ";
@@ -37,9 +36,7 @@ public sealed class EventLevelIndentEnricher : ILogEventEnricher
 		logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(LevelIndentProp, IndentLevels[logEvent.Level])!);
 	}
 
-	/// <summary>
-	///  Just repeats the <see cref="IndentString"/> by the amount of <paramref name="repetitions"/>
-	/// </summary>
+	/// <summary>Just repeats the <see cref="IndentString"/> by the amount of <paramref name="repetitions"/></summary>
 	/// <param name="repetitions">The number of times to repeat the indent string</param>
 	private static string GenerateIndentString(int repetitions)
 	{

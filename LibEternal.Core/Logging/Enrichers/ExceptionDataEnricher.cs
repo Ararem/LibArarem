@@ -7,14 +7,10 @@ using System.Linq;
 
 namespace LibEternal.Core.Logging.Enrichers;
 
-/// <summary>
-///  Enricher that adds a dictionary property to log events from the <see cref="Exception.Data"/> property
-/// </summary>
+/// <summary>Enricher that adds a dictionary property to log events from the <see cref="Exception.Data"/> property</summary>
 public sealed class ExceptionDataEnricher : ILogEventEnricher
 {
-	/// <summary>
-	///  Property name used for enriching
-	/// </summary>
+	/// <summary>Property name used for enriching</summary>
 	public const string ExceptionDataProp = "ExceptionData";
 
 	/// <inheritdoc/>
