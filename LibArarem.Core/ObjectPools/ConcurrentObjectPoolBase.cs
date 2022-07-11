@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace LibEternal.Core.ObjectPools;
+namespace LibArarem.Core.ObjectPools;
 
 /// <summary>The base class for implementing a thread-safe object pool</summary>
 /// <typeparam name="T">The type of object to pool for</typeparam>

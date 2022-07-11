@@ -4,7 +4,7 @@ using Serilog.Events;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LibEternal.Core.Logging.Enrichers;
+namespace LibArarem.Core.Logging.Enrichers;
 
 /// <inheritdoc/>
 /// <summary>

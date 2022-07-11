@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LibEternal.Core.Logging.Enrichers;
+namespace LibArarem.Core.Logging.Enrichers;
 
 /// <summary>Enricher that adds a dictionary property to log events from the <see cref="Exception.Data"/> property</summary>
 public sealed class ExceptionDataEnricher : ILogEventEnricher

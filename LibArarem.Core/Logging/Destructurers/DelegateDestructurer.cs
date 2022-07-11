@@ -4,7 +4,7 @@ using Serilog.Events;
 using System;
 using System.Linq;
 
-namespace LibEternal.Core.Logging.Destructurers;
+namespace LibArarem.Core.Logging.Destructurers;
 
 /// <inheritdoc/>
 [PublicAPI]

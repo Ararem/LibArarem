@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using LibEternal.Core.ObjectPools;
+using LibArarem.Core.ObjectPools;
 using Serilog;
 using Serilog.Core;
 using Serilog.Debugging;
@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace LibEternal.Core.Logging.Enrichers;
+namespace LibArarem.Core.Logging.Enrichers;
 
 /// <summary>
 ///  An <see cref="ILogEventEnricher"/> that applies context-related enrichment. Currently implemented context:
@@ -175,7 +175,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 	{
 		/*
 	* Example output:
-	* This >>>>		at void LibEternal.Core.Logging.Enrichers.CallerContextEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+	* This >>>>		at void LibArarem.Core.Logging.Enrichers.CallerContextEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 	* 					at void Serilog.Core.Enrichers.SafeAggregateEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 	* 					at void Serilog.Core.Logger.Dispatch(LogEvent logEvent)
 	* 					at void Serilog.Core.Logger.Write(LogEventLevel level, Exception exception, string messageTemplate, params object[] propertyValues)

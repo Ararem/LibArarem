@@ -4,7 +4,7 @@ using System;
 using System.Text;
 using System.Threading;
 
-namespace LibEternal.Core.ObjectPools;
+namespace LibArarem.Core.ObjectPools;
 
 /// <summary>
 ///  An object pool implementation of <see cref="Microsoft.Extensions.ObjectPool.ObjectPool"/>. but for a <see cref="System.Text.StringBuilder"/>

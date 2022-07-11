@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.Core", "LibEternal.Core\LibEternal.Core.csproj", "{606D779D-E993-46BF-8AC0-9F75500247DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibArarem.Core", "LibArarem.Core\LibArarem.Core.csproj", "{606D779D-E993-46BF-8AC0-9F75500247DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

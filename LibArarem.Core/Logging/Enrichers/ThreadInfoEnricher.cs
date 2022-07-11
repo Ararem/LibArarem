@@ -3,7 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System.Threading;
 
-namespace LibEternal.Core.Logging.Enrichers;
+namespace LibArarem.Core.Logging.Enrichers;
 
 /// <inheritdoc/>
 /// <summary>Enriches log events with information about the <see cref="System.Threading.Thread.CurrentThread"/></summary>

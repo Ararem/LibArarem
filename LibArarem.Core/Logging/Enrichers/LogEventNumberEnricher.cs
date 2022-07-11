@@ -3,7 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System.Threading;
 
-namespace LibEternal.Core.Logging.Enrichers;
+namespace LibArarem.Core.Logging.Enrichers;
 
 /// <inheritdoc/>
 /// <summary>Enriches log events with a counter that counts how many log events have been logged.</summary>

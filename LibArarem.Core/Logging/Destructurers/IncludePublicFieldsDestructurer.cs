@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace LibEternal.Core.Logging.Destructurers;
+namespace LibArarem.Core.Logging.Destructurers;
 
 public class IncludePublicFieldsDestructurer : IDestructuringPolicy
 {
