@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace LibArarem.Core.Exceptions;
@@ -16,7 +15,7 @@ public sealed class ArgumentOutOfRangeException<T> : ArgumentException
 	///  exception is raised in a <see langword="catch"/> block that handles the inner exception.
 	/// </param>
 	/// <param name="bounds">Array of bounds between which the values are valid</param>
-	public ArgumentOutOfRangeException(T actualValue, string? message=null, string? paramName = null, Exception? innerException = null, params (T Lower, T Upper)[] bounds) : base(message, paramName, innerException)
+	public ArgumentOutOfRangeException(T actualValue, string? message = null, string? paramName = null, Exception? innerException = null, params (T Lower, T Upper)[] bounds) : base(message, paramName, innerException)
 	{
 		ActualValue = actualValue;
 		Bounds      = bounds;
@@ -27,7 +26,7 @@ public sealed class ArgumentOutOfRangeException<T> : ArgumentException
 	/// <param name="message">The error message that explains the reason for the exception.</param>
 	/// <param name="paramName">The name of the parameter that caused the current exception.</param>
 	/// <param name="bounds">Array of bounds between which the values are valid</param>
-	public ArgumentOutOfRangeException(T actualValue, string? message=null, string? paramName = null, params (T Lower, T Upper)[] bounds) : this(actualValue, message,paramName,null,bounds)
+	public ArgumentOutOfRangeException(T actualValue, string? message = null, string? paramName = null, params (T Lower, T Upper)[] bounds) : this(actualValue, message, paramName, null, bounds)
 	{
 	}
 
@@ -36,7 +35,7 @@ public sealed class ArgumentOutOfRangeException<T> : ArgumentException
 	/// <param name="message">The error message that explains the reason for the exception.</param>
 	/// <param name="paramName">The name of the parameter that caused the current exception.</param>
 	/// <param name="bounds">Array of bounds containing valid values</param>
-	public ArgumentOutOfRangeException(T actualValue, string? message=null, string? paramName = null, params T[] bounds) : this(actualValue, message,paramName,null, bounds.Select(b=>(b,b)).ToArray())
+	public ArgumentOutOfRangeException(T actualValue, string? message = null, string? paramName = null, params T[] bounds) : this(actualValue, message, paramName, null, bounds.Select(b => (b, b)).ToArray())
 	{
 	}
 
