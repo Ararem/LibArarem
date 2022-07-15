@@ -139,7 +139,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		}
 
 		//Now do the actual enriching, with nicer names
-		string callingMethodStr = callerMethod.Name!;
+		string callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch {null => string.Empty, {} s => $"+{s}"}}";
 		string callingTypeStr   = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
 		string fileLineLocation = $"{lineNumber}:{columnNumber}";
 		// string fileLineLocation = $"{lineNumber switch { 0 => "?", var l => l.ToString() }}:{columnNumber switch { 0 => "?", var l => l.ToString() }}";
@@ -172,7 +172,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 			fileLineLocationStr = $"{callerFrame.GetFileLineNumber()}:{callerFrame.GetFileColumnNumber()}";
 			Type? callerType = callerMethod.DeclaringType;
 
-			callingMethodStr = callerMethod.Name!;
+			callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch {null => string.Empty, {} s => $"+{s}"}}";
 
 			/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
 			* From https://stackoverflow.com/a/35266094
@@ -211,7 +211,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 	*/
 
 		//Find how far we need to go to skip all the serilog methods
-		StackFrame[] frames = new StackTrace(true).GetFrames();
+		StackFrame[] frames = new StackTrace(false).GetFrames();
 
 		bool gotToSerilogYet = false;
 		int  skip            = 0;
@@ -250,7 +250,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		try
 		{
 			//Tis a shame that one cannot pass in the frames on their own, only create a new trace
-			return new EnhancedStackTrace(new StackTrace(skip));
+			return new EnhancedStackTrace(new StackTrace(skip, true));
 		}
 		catch (Exception e)
 		{
