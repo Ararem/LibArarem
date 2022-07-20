@@ -57,8 +57,10 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 	/// <summary>The name of the property for the calling type</summary>
 	public const string CallingTypeNameProp = "CallingTypeName";
 
-	/// <summary>The name of the property for the line:column at which the log function was called</summary>
-	public const string CallingMethodLineColumnProp = "CallingMethodLineColumn";
+	/// <summary>The name of the property for the line at which the log function was called</summary>
+	public const string CallingMethodLineProp = "CallingMethodLine";
+	/// <summary>The name of the property for the column at which the log function was called</summary>
+	public const string CallingMethodColumnProp = "CallingMethodColumn";
 
 	/// <summary>The name of the property for the file in which the log function was called</summary>
 	public const string CallingMethodFileProp = "CallingMethodFile";
@@ -141,14 +143,14 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		//Now do the actual enriching, with nicer names
 		string callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch {null => string.Empty, {} s => $"+{s}"}}";
 		string callingTypeStr   = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
-		string fileLineLocation = $"{lineNumber}:{columnNumber}";
 		// string fileLineLocation = $"{lineNumber switch { 0 => "?", var l => l.ToString() }}:{columnNumber switch { 0 => "?", var l => l.ToString() }}";
 
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,         callingTypeStr)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,       callingMethodStr)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,              "<<<ERROR: STACKTRACE DISABLED FOR PERFORMANCE>>>")!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,       fileName)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineColumnProp, fileLineLocation)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp, lineNumber)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);
 	}
 
 #region Slow Enriching
@@ -159,17 +161,19 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		ArgumentNullException.ThrowIfNull(propertyFactory);
 
 		EnhancedStackTrace? trace = GetStackTrace();
-		string              callingTypeStr, callingMethodStr, stackTraceStr, fileName, fileLineLocationStr;
+		string              callingTypeStr, callingMethodStr, stackTraceStr, fileName;
+		int                 lineNumber = 0, columnNumber = 0;
 		if (trace is null)
 		{
-			callingTypeStr = callingMethodStr = stackTraceStr = fileName = fileLineLocationStr = "<StackTrace Error>";
+			callingTypeStr = callingMethodStr = stackTraceStr = fileName = "<StackTrace Error>";
 		}
 		else
 		{
 			EnhancedStackFrame callerFrame  = (EnhancedStackFrame)trace.GetFrame(0);
 			ResolvedMethod     callerMethod = callerFrame.MethodInfo;
-			fileName            = callerFrame.GetFileName() ?? "<Unknown File>";
-			fileLineLocationStr = $"{callerFrame.GetFileLineNumber()}:{callerFrame.GetFileColumnNumber()}";
+			fileName     = callerFrame.GetFileName() ?? "<Unknown File>";
+			lineNumber   = callerFrame.GetFileLineNumber();
+			columnNumber = callerFrame.GetFileColumnNumber();
 			Type? callerType = callerMethod.DeclaringType;
 
 			callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch {null => string.Empty, {} s => $"+{s}"}}";
@@ -185,12 +189,12 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 			stackTraceStr = trace.ToString();
 		}
 
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,         callingTypeStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,       callingMethodStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,              stackTraceStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,       fileName)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineColumnProp, fileLineLocationStr)!);
-	}
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,     callingTypeStr)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,   callingMethodStr)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,          stackTraceStr)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,   fileName)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp,   lineNumber)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);	}
 
 	/// <summary>Returns an enhanced stack trace, skipping serilog methods</summary>
 	private static EnhancedStackTrace? GetStackTrace()
