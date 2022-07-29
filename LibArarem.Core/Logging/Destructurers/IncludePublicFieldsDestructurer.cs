@@ -32,29 +32,27 @@ public class IncludePublicFieldsDestructurer : IDestructuringPolicy
 																}
 														)
 														.Where(static o => o is not null)!;
-		;
 
 		IEnumerable<LogEventProperty> propertiesWithValues = typeInfo
-															.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-															.Where(f => f.CanRead)
-															.Select(
-																	p =>
-																	{
-																		try
-																		{
-																			object?                val     = p.GetValue(value);
-																			LogEventPropertyValue? propVal = propertyValueFactory.CreatePropertyValue(val);
-																			LogEventProperty       ret     = new(p.Name, propVal);
-																			return ret;
-																		}
-																		catch (Exception)
-																		{
-																			return null;
-																		}
-																	}
-															)
-															.Where(static o => o is not null)!;
-		;
+															 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+															 .Where(f => f.CanRead)
+															 .Select(
+																	 p =>
+																	 {
+																		 try
+																		 {
+																			 object?                val     = p.GetValue(value);
+																			 LogEventPropertyValue? propVal = propertyValueFactory.CreatePropertyValue(val);
+																			 LogEventProperty       ret     = new(p.Name, propVal);
+																			 return ret;
+																		 }
+																		 catch (Exception)
+																		 {
+																			 return null;
+																		 }
+																	 }
+															 )
+															 .Where(static o => o is not null)!;
 
 		result = new StructureValue(fieldsWithValues.Union(propertiesWithValues));
 		return true;
