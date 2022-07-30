@@ -114,6 +114,8 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 
 				if (tempCallerMethod is null) continue; //Invalid (nonexistent) method
 
+				if(tempCallerMethod.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
+
 				callerMethod = EnhancedStackTrace.GetMethodDisplayString(tempCallerMethod);
 				callerType   = callerMethod.DeclaringType;
 				lineNumber   = frame.GetFileLineNumber();
@@ -226,8 +228,12 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		for (int i = 0; i < frames.Length; i++)
 		{
 			MethodBase? method = frames[i].GetMethod();
+
 			//If the method, type or name is null, the expression is false
 			bool isSerilog = method?.DeclaringType?.Namespace?.StartsWith("Serilog") ?? false;
+
+			if(method!.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
+
 			//E.g. "at void Core.Logger.ReinitialiseLogger()+GetStackTrace()"
 			// ReSharper disable once ConvertIfStatementToSwitchStatement
 			if (!gotToSerilogYet && !isSerilog)
