@@ -28,7 +28,6 @@ public sealed class EventLevelIndentEnricher : ILogEventEnricher
 			[LogEventLevel.Information] = GenerateIndentString(0),
 			[LogEventLevel.Debug]       = GenerateIndentString(1),
 			[LogEventLevel.Verbose]     = GenerateIndentString(2),
-			[LogUtils.TraceLevel]     = GenerateIndentString(3)
 	};
 
 	/// <inheritdoc/>

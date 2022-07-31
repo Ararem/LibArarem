@@ -11,14 +11,11 @@ namespace LibArarem.Core.Logging;
 /// <summary>Class containing helper methods for logging</summary>
 public static class LogUtils
 {
-	/// <summary>A (nonexistent) <see cref="LogEventLevel"/> for TRACE events</summary>
-	public const LogEventLevel TraceLevel = (LogEventLevel)((int)LogEventLevel.Verbose - 1);
-
 	/// <summary>Logs a message that an event was called, allowing for callback tracing</summary>
 	/// <example>
 	///  <code>
 	///  void ButtonClickedCallback(object? sender, EventArgs eventArgs){
-	/// 		TrackEvent(sender, eventArgs); //ButtonClickedCallback() from MyButton: {ButtonState: DoubleClick}
+	/// 		TrackEvent(sender, eventArgs); //Outputs "ButtonClickedCallback() from MyButton: {ButtonState: DoubleClick}"
 	/// 		//...
 	///   }
 	///   </code>
@@ -60,53 +57,4 @@ public static class LogUtils
 		else
 			Write(level, "{Expression}: {Value}, {Message}", expressionString, value, message);
 	}
-
-	// ReSharper disable TemplateIsNotCompileTimeConstantProblem
-	/// <summary>Log function for TRACE level events</summary>
-	/// <param name="messageTemplate">Message template describing the event</param>
-	/// <param name="propertyValues">Objects positionally formatted into the message template.</param>
-	[MessageTemplateFormatMethod("messageTemplate")]
-	[Conditional("TRACE")]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	[StackTraceHidden]
-	public static void Trace([StructuredMessageTemplate] string messageTemplate, params object[] propertyValues) => Write(TraceLevel, messageTemplate, propertyValues);
-
-	/// <summary>Log function for TRACE level events</summary>
-	/// <param name="messageTemplate">Message template describing the event</param>
-	[MessageTemplateFormatMethod("messageTemplate")]
-	[Conditional("TRACE")]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	[StackTraceHidden]
-	public static void Trace([StructuredMessageTemplate] string messageTemplate) => Write(TraceLevel, messageTemplate);
-
-	/// <summary>Log function for TRACE level events</summary>
-	/// <param name="messageTemplate">Message template describing the event</param>
-	/// <param name="t">Object positionally formatted into the message template.</param>
-	[MessageTemplateFormatMethod("messageTemplate")]
-	[Conditional("TRACE")]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	[StackTraceHidden]
-	public static void Trace<T>([StructuredMessageTemplate] string messageTemplate, T t) => Write(TraceLevel, messageTemplate, t);
-
-	/// <summary>Log function for TRACE level events</summary>
-	/// <param name="messageTemplate">Message template describing the event</param>
-	/// <param name="t1">Object positionally formatted into the message template.</param>
-	/// <param name="t2">Object positionally formatted into the message template.</param>
-	[MessageTemplateFormatMethod("messageTemplate")]
-	[Conditional("TRACE")]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	[StackTraceHidden]
-	public static void Trace<T1, T2>([StructuredMessageTemplate] string messageTemplate, T1 t1, T2 t2) => Write(TraceLevel, messageTemplate, t1, t2);
-
-	/// <summary>Log function for TRACE level events</summary>
-	/// <param name="messageTemplate">Message template describing the event</param>
-	/// <param name="t1">Object positionally formatted into the message template.</param>
-	/// <param name="t2">Object positionally formatted into the message template.</param>
-	/// <param name="t3">Object positionally formatted into the message template.</param>
-	[MessageTemplateFormatMethod("messageTemplate")]
-	[Conditional("TRACE")]
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	[StackTraceHidden]
-	public static void Trace<T1, T2, T3>([StructuredMessageTemplate] string messageTemplate, T1 t1, T2 t2, T3 t3) => Write(TraceLevel, messageTemplate, t1, t2, t3);
-	// ReSharper restore TemplateIsNotCompileTimeConstantProblem
 }
