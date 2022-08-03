@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Diagnostics;
