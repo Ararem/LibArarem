@@ -59,6 +59,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 
 	/// <summary>The name of the property for the line at which the log function was called</summary>
 	public const string CallingMethodLineProp = "CallingMethodLine";
+
 	/// <summary>The name of the property for the column at which the log function was called</summary>
 	public const string CallingMethodColumnProp = "CallingMethodColumn";
 
@@ -114,7 +115,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 
 				if (tempCallerMethod is null) continue; //Invalid (nonexistent) method
 
-				if(tempCallerMethod.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
+				if (tempCallerMethod.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
 
 				callerMethod = EnhancedStackTrace.GetMethodDisplayString(tempCallerMethod);
 				callerType   = callerMethod.DeclaringType;
@@ -143,15 +144,15 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		}
 
 		//Now do the actual enriching, with nicer names
-		string callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch {null => string.Empty, {} s => $"+{s}"}}";
+		string callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch { null => string.Empty, {} s => $"+{s}" }}";
 		string callingTypeStr   = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
 		// string fileLineLocation = $"{lineNumber switch { 0 => "?", var l => l.ToString() }}:{columnNumber switch { 0 => "?", var l => l.ToString() }}";
 
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,         callingTypeStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,       callingMethodStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,              "<<<ERROR: STACKTRACE DISABLED FOR PERFORMANCE>>>")!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,       fileName)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp, lineNumber)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,     callingTypeStr)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,   callingMethodStr)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,          "<<<ERROR: STACKTRACE DISABLED FOR PERFORMANCE>>>")!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,   fileName)!);
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp,   lineNumber)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);
 	}
 
@@ -178,7 +179,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 			columnNumber = callerFrame.GetFileColumnNumber();
 			Type? callerType = callerMethod.DeclaringType;
 
-			callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch {null => string.Empty, {} s => $"+{s}"}}";
+			callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch { null => string.Empty, {} s => $"+{s}" }}";
 
 			/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
 			* From https://stackoverflow.com/a/35266094
@@ -196,7 +197,8 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,          stackTraceStr)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,   fileName)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp,   lineNumber)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);	}
+		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);
+	}
 
 	/// <summary>Returns an enhanced stack trace, skipping serilog methods</summary>
 	private static EnhancedStackTrace? GetStackTrace()
@@ -232,7 +234,7 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 			//If the method, type or name is null, the expression is false
 			bool isSerilog = method?.DeclaringType?.Namespace?.StartsWith("Serilog") ?? false;
 
-			if(method!.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
+			if (method!.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
 
 			//E.g. "at void Core.Logger.ReinitialiseLogger()+GetStackTrace()"
 			// ReSharper disable once ConvertIfStatementToSwitchStatement

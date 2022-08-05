@@ -16,13 +16,9 @@ public sealed class ExceptionDataEnricher : ILogEventEnricher
 	/// <inheritdoc/>
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 	{
-		if ((logEvent.Exception            == null) ||
-			(logEvent.Exception.Data.Count == 0)) return;
+		if ((logEvent.Exception == null) || (logEvent.Exception.Data.Count == 0)) return;
 
-		Dictionary<string, object?> dataDictionary = logEvent.Exception.Data
-															.Cast<DictionaryEntry>()
-															.Where(e => e.Key is string)
-															.ToDictionary(e => (string)e.Key, e => e.Value);
+		Dictionary<string, object?> dataDictionary = logEvent.Exception.Data.Cast<DictionaryEntry>().Where(e => e.Key is string).ToDictionary(e => (string)e.Key, e => e.Value);
 
 		LogEventProperty? property = propertyFactory.CreateProperty(ExceptionDataProp, dataDictionary, true);
 

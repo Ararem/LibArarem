@@ -27,14 +27,14 @@ public sealed class EventLevelIndentEnricher : ILogEventEnricher
 			[LogEventLevel.Warning]     = GenerateIndentString(0),
 			[LogEventLevel.Information] = GenerateIndentString(0),
 			[LogEventLevel.Debug]       = GenerateIndentString(1),
-			[LogEventLevel.Verbose]     = GenerateIndentString(2),
+			[LogEventLevel.Verbose]     = GenerateIndentString(2)
 	};
 
 	/// <inheritdoc/>
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 	{
 		IndentLevels.TryGetValue(logEvent.Level, out string? indent);
-		logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(LevelIndentProp, indent??string.Empty)!);
+		logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty(LevelIndentProp, indent ?? string.Empty)!);
 	}
 
 	/// <summary>Just repeats the <see cref="IndentString"/> by the amount of <paramref name="repetitions"/></summary>

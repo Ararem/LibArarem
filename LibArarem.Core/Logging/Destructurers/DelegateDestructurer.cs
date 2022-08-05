@@ -22,9 +22,7 @@ public sealed class DelegateDestructurer : IDestructuringPolicy
 
 		Delegate[] delegates = del.GetInvocationList();
 		//Don't want to treat it as a list if there's only 1 element
-		result = delegates.Length == 1
-				? propertyValueFactory.CreatePropertyValue(delegates[0].Method)
-				: propertyValueFactory.CreatePropertyValue(delegates.Select(m => m.Method));
+		result = delegates.Length == 1 ? propertyValueFactory.CreatePropertyValue(delegates[0].Method) : propertyValueFactory.CreatePropertyValue(delegates.Select(m => m.Method));
 		return true;
 	}
 }
