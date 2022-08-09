@@ -17,13 +17,13 @@ public sealed class LogEventNumberEnricher : ILogEventEnricher
 	/// <summary>The name of the property for the event number</summary>
 	public const string EventNumberProp = "EventNumber";
 
-	private static long counter = 0;
+	private static ulong counter = 1;
 
 	/// <inheritdoc/>
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 	{
 		//Increment our counter in a 'thread safe' manner
-		long             c        = Interlocked.Increment(ref counter);
+		ulong             c        = Interlocked.Increment(ref counter);
 		LogEventProperty property = propertyFactory.CreateProperty(EventNumberProp, c)!;
 		logEvent.AddOrUpdateProperty(property);
 	}

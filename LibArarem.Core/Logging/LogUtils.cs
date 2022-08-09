@@ -1,5 +1,7 @@
+using LibArarem.Core.Logging.Enrichers;
 using Serilog;
 using Serilog.Context;
+using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Diagnostics;
@@ -13,9 +15,9 @@ public static class LogUtils
 	/// <summary>
 	/// Returns a <see cref="ILogger"/> that contains a "Context" property for which object instance is making the log call
 	/// </summary>
-	public static ILogger WithInstanceContext(object obj)
+	public static ILogger WithInstanceContext(object obj, bool destructure = true)
 	{
-		return Log.ForContext("Context", obj, true);
+		return Log.ForContext(new InstanceContextEnricher(obj, destructure));
 	}
 
 	/// <summary>
