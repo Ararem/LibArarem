@@ -15,11 +15,11 @@ public static class LogUtils
 	/// </summary>
 	public static ILogger WithInstanceContext(object obj)
 	{
-		return Log.ForContext("@Context", obj);
+		return Log.ForContext("Context", obj, true);
 	}
 
 	/// <summary>
-	/// Pushes a property onto the <see cref="LogContext"/> that marks a section of code as extremely verbose (like even more verbose that <see cref="LogEventLevel.Verbose"/>) - e.g. frame update messages
+	/// Pushes a property onto the <see cref="LogContext"/> that marks a section of code as extremely verbose (like even more verbose that <see cref="LogEventLevel.Verbose"/>) - e.g. frame update messages or other logs that get called regularly and aren't important normally
 	/// </summary>
 	/// <seealso cref="LogContext"/>
 	/// <seealso cref="LogContext.PushProperty"/>
