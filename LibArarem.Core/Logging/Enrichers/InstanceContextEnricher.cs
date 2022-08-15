@@ -8,9 +8,6 @@ namespace LibArarem.Core.Logging.Enrichers;
 /// </summary>
 public sealed class InstanceContextEnricher : ILogEventEnricher
 {
-	/// <summary>
-	///
-	/// </summary>
 	public const    string  InstanceContextProp = "InstanceContext";
 	public readonly object? InstanceContext;
 	public readonly bool    Destructure;
