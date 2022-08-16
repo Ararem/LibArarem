@@ -5,7 +5,9 @@ using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace LibArarem.Core.Logging;
 
@@ -39,11 +41,15 @@ public static class LogUtils
 	///   }
 	///   </code>
 	/// </example>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	[StackTraceHidden]
-	public static void TrackEvent(this ILogger logger, object? sender, EventArgs eventArgs)
+	public static void TrackEvent(this ILogger logger, object? sender, EventArgs eventArgs, [CallerMemberName] string? caller = null)
 	{
-		logger.Debug("{CallbackName} from {@Sender}: {@EventArgs}", new StackFrame(1).GetMethod(), sender, eventArgs);
+		TrackEvent(logger, LogEventLevel.Debug, sender, eventArgs, caller);
+	}
+
+	///<inheritdoc cref="TrackEvent(Serilog.ILogger,object?,System.EventArgs,string?)"/>
+	public static void TrackEvent(this ILogger logger, LogEventLevel level, object? sender, EventArgs eventArgs, [CallerMemberName] string? caller = null)
+	{
+		logger.Write(level,"{CallbackName} from {@Sender}: {@EventArgs}", caller+"()", sender, eventArgs);
 	}
 
 	/// <summary>Logs an expression and it's value to the logger, with an optional message</summary>
