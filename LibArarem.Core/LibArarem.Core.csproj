@@ -7,17 +7,21 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>preview</LangVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Configurations>Release [Full];Dev [Partial];Debug [Full]</Configurations>
+		<Platforms>AnyCPU</Platforms>
 	</PropertyGroup>
-
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-		<DebugType>full</DebugType>
-		<DocumentationFile>bin\Debug\LibEternal.xml</DocumentationFile>
-		<WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug [Full]' ">
+	  <DebugType>full</DebugType>
+	  <DocumentationFile>bin\Debug\LibEternal.xml</DocumentationFile>
+	  <WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
+	  <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
+	  <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<DebugSymbols>true</DebugSymbols>
-		<DocumentationFile>bin\Release\LibEternal.xml</DocumentationFile>
-		<WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release [Full]' ">
+	  <DebugSymbols>true</DebugSymbols>
+	  <DocumentationFile>bin\Release\LibEternal.xml</DocumentationFile>
+	  <WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
+	  <Optimize Condition=" '$(Optimize)' == '' ">true</Optimize>
 	</PropertyGroup>
 
 	<!-- This lets us write the analyzer logs to file -->
