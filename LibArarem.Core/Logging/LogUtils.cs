@@ -41,12 +41,14 @@ public static class LogUtils
 	///   }
 	///   </code>
 	/// </example>
+	[StackTraceHidden]
 	public static void TrackEvent(this ILogger logger, object? sender, EventArgs eventArgs, [CallerMemberName] string? caller = null)
 	{
 		TrackEvent(logger, LogEventLevel.Debug, sender, eventArgs, caller);
 	}
 
 	///<inheritdoc cref="TrackEvent(Serilog.ILogger,object?,System.EventArgs,string?)"/>
+	[StackTraceHidden]
 	public static void TrackEvent(this ILogger logger, LogEventLevel level, object? sender, EventArgs eventArgs, [CallerMemberName] string? caller = null)
 	{
 		logger.Write(level,"{CallbackName} from {@Sender}: {@EventArgs}", caller+"()", sender, eventArgs);
@@ -58,7 +60,6 @@ public static class LogUtils
 	/// <param name="message">Optional message to be logged after the expression</param>
 	/// <param name="expressionString">(Please don't set this) string containing the compile time expression passed to <paramref name="value"/></param>
 	/// <typeparam name="T">Type of the expression</typeparam>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	[StackTraceHidden]
 	public static void LogExpression<T>(this ILogger logger, T value, string? message = null, [CallerArgumentExpression("value")] string expressionString = "Unknown Variable")
 	{
@@ -74,7 +75,6 @@ public static class LogUtils
 	/// <param name="message">Optional message to be logged after the expression</param>
 	/// <param name="expressionString">(Please don't set this) string containing the compile time expression passed to <paramref name="value"/></param>
 	/// <typeparam name="T">Type of the expression</typeparam>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	[StackTraceHidden]
 	public static void LogExpressionDestructured<T>(this ILogger logger, T value, string? message = null, [CallerArgumentExpression("value")] string expressionString = "Unknown Variable")
 	{
@@ -91,7 +91,6 @@ public static class LogUtils
 	/// <param name="message">Optional message to be logged after the expression</param>
 	/// <param name="expressionString">(Please don't set this) string containing the compile time expression passed to <paramref name="value"/></param>
 	/// <typeparam name="T">Type of the expression</typeparam>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	[StackTraceHidden]
 	public static void LogExpression<T>(this ILogger logger, LogEventLevel level, T value, string? message = null, [CallerArgumentExpression("value")] string expressionString = "Unknown Variable")
 	{

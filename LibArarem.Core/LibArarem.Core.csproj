@@ -11,17 +11,17 @@
 		<Platforms>AnyCPU</Platforms>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug [Full]' ">
-	  <DebugType>full</DebugType>
-	  <DocumentationFile>bin\Debug\LibEternal.xml</DocumentationFile>
-	  <WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
-	  <DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
-	  <Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
+		<DebugType>full</DebugType>
+		<DocumentationFile>bin\Debug\LibEternal.xml</DocumentationFile>
+		<WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
+		<DebugSymbols Condition=" '$(DebugSymbols)' == '' ">true</DebugSymbols>
+		<Optimize Condition=" '$(Optimize)' == '' ">false</Optimize>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release [Full]' ">
-	  <DebugSymbols>true</DebugSymbols>
-	  <DocumentationFile>bin\Release\LibEternal.xml</DocumentationFile>
-	  <WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
-	  <Optimize Condition=" '$(Optimize)' == '' ">true</Optimize>
+		<DebugSymbols>true</DebugSymbols>
+		<DocumentationFile>bin\Release\LibEternal.xml</DocumentationFile>
+		<WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
+		<Optimize Condition=" '$(Optimize)' == '' ">true</Optimize>
 	</PropertyGroup>
 
 	<!-- This lets us write the analyzer logs to file -->
@@ -34,33 +34,33 @@
 		<!-- Don't include the output from a previous source generator execution into future runs; the */** trick here ensures that there's
 		at least one subdirectory, which is our key that it's coming from a source generator as opposed to something that is coming from
 		some other tool. -->
-		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs" />
-		<Compile Remove="CompilerGenerated\**" />
-		<None Remove="CompilerGenerated\**" />
+		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs"/>
+		<Compile Remove="CompilerGenerated\**"/>
+		<None Remove="CompilerGenerated\**"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ben.Demystifier" Version="0.4.1" />
-		<PackageReference Include="Destructurama.Attributed" Version="3.0.0" />
-		<PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.7.22376.6" />
-		<PackageReference Include="NetFabric.Hyperlinq" Version="3.0.0-beta9" />
+		<PackageReference Include="Ben.Demystifier" Version="0.4.1"/>
+		<PackageReference Include="Destructurama.Attributed" Version="3.0.0"/>
+		<PackageReference Include="JetBrains.Annotations" Version="2022.1.0"/>
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.7.22376.6"/>
+		<PackageReference Include="NetFabric.Hyperlinq" Version="3.0.0-beta9"/>
 		<PackageReference Include="NetFabric.Hyperlinq.Analyzer" Version="2.0.4">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Serilog" Version="2.12.0-dev-01501" />
-		<PackageReference Include="Serilog.Enrichers.Demystifier" Version="1.0.2" />
-		<PackageReference Include="Serilog.Enrichers.Dynamic" Version="1.0.9" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890" />
-		<PackageReference Include="Serilog.Timed.Operations" Version="1.0.46" />
+		<PackageReference Include="Serilog" Version="2.12.0-dev-01501"/>
+		<PackageReference Include="Serilog.Enrichers.Demystifier" Version="1.0.2"/>
+		<PackageReference Include="Serilog.Enrichers.Dynamic" Version="1.0.9"/>
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890"/>
+		<PackageReference Include="Serilog.Timed.Operations" Version="1.0.46"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Remove="CompilerGenerated\**" />
+		<EmbeddedResource Remove="CompilerGenerated\**"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="CompilerGenerated\**" />
+		<None Remove="CompilerGenerated\**"/>
 	</ItemGroup>
 </Project>

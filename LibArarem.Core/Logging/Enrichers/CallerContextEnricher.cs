@@ -2,11 +2,12 @@ using JetBrains.Annotations;
 using LibArarem.Core.ObjectPools;
 using Serilog;
 using Serilog.Core;
-using Serilog.Debugging;
 using Serilog.Events;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace LibArarem.Core.Logging.Enrichers;
 
@@ -72,6 +73,9 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 	/// <summary>The name of the property for the calling method</summary>
 	public const string CallingMethodNameProp = "CallingMethodName";
 
+	private static readonly ConcurrentDictionary<MethodBase, bool> StackTraceHiddenMethods = new();
+	private static readonly ConcurrentDictionary<Type, bool>       StackTraceHiddenTypes   = new();
+
 	private readonly PerfMode perfMode;
 
 	/// <summary>Constructs a new instance of this type</summary>
@@ -84,103 +88,44 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 		this.perfMode = perfMode;
 	}
 
+
 	/// <inheritdoc/>
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-	{
-		// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-		switch (perfMode)
-		{
-			case PerfMode.SingleFrameFast:
-				EnrichFastDemystify(logEvent, propertyFactory);
-				break;
-			case PerfMode.FullTraceSlow:
-				EnrichSlowFullTrace(logEvent, propertyFactory);
-				break;
-		}
-	}
-
-	private static void EnrichFastDemystify(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-	{
-		ResolvedMethod callerMethod = null!;
-		Type?          callerType   = null;
-		int            lineNumber   = 0, columnNumber = 0;
-		string         fileName     = "<File Error>";
-		{
-			StackFrame[] frames          = new StackTrace(true).GetFrames();
-			bool         gotToSerilogYet = false;
-			for (int i = 0; i < frames.Length; i++)
-			{
-				StackFrame  frame            = frames[i];
-				MethodBase? tempCallerMethod = frame.GetMethod();
-
-				if (tempCallerMethod is null) continue; //Invalid (nonexistent) method
-
-				if (tempCallerMethod.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
-
-				callerMethod = EnhancedStackTrace.GetMethodDisplayString(tempCallerMethod);
-				callerType   = callerMethod.DeclaringType;
-				lineNumber   = frame.GetFileLineNumber();
-				columnNumber = frame.GetFileColumnNumber();
-				fileName     = frame.GetFileName() ?? "<Unknown File>";
-
-				if (callerType is null) continue;
-
-				bool isSerilog = callerType.Namespace?.StartsWith("Serilog") ?? false;
-				switch (gotToSerilogYet)
-				{
-					case false when !isSerilog:
-						continue;
-					case false:
-						gotToSerilogYet = true;
-						continue;
-				}
-
-				if (isSerilog) continue;
-
-				//Finally found the right number
-				//https://youtu.be/Vy7RaQUmOzE?t=203
-				break;
-			}
-		}
-
-		//Now do the actual enriching, with nicer names
-		string callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch { null => string.Empty, {} s => $"+{s}" }}";
-		string callingTypeStr   = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
-		// string fileLineLocation = $"{lineNumber switch { 0 => "?", var l => l.ToString() }}:{columnNumber switch { 0 => "?", var l => l.ToString() }}";
-
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,     callingTypeStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,   callingMethodStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,          "<<<ERROR: STACKTRACE DISABLED FOR PERFORMANCE>>>")!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,   fileName)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp,   lineNumber)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);
-	}
-
-#region Slow Enriching
-
-	private static void EnrichSlowFullTrace(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
 	{
 		ArgumentNullException.ThrowIfNull(logEvent);
 		ArgumentNullException.ThrowIfNull(propertyFactory);
 
-		EnhancedStackTrace? trace = GetStackTrace();
-		string              callingTypeStr, callingMethodStr, stackTraceStr, fileName;
-		int                 lineNumber = 0, columnNumber = 0;
-		if (trace is null)
+		int offset = FindOffsetToCaller();
+
+		ResolvedMethod callerMethod;
+		string         fileName;
+		int            lineNumber;
+		int            columnNumber;
+		Type?          callerType;
+		string         callingMethodStr;
+		string         callingTypeStr;
+
+		if (perfMode == PerfMode.FullTraceSlow)
 		{
-			callingTypeStr = callingMethodStr = stackTraceStr = fileName = "<StackTrace Error>";
-		}
-		else
-		{
-			EnhancedStackFrame callerFrame  = (EnhancedStackFrame)trace.GetFrame(0);
-			ResolvedMethod     callerMethod = callerFrame.MethodInfo;
+			EnhancedStackTrace trace       = new(new StackTrace(offset));
+			EnhancedStackFrame callerFrame = (EnhancedStackFrame)trace.GetFrame(0);
+			logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp, trace));
+
+			callerMethod = callerFrame.MethodInfo;
 			fileName     = callerFrame.GetFileName() ?? "<Unknown File>";
 			lineNumber   = callerFrame.GetFileLineNumber();
 			columnNumber = callerFrame.GetFileColumnNumber();
-			Type? callerType = callerMethod.DeclaringType;
-
-			callingMethodStr = $"{callerMethod.Name!}{callerMethod.SubMethod switch { null => string.Empty, {} s => $"+{s}" }}";
-
+			callerType   = callerMethod.DeclaringType;
+			callingMethodStr = StringBuilderPool.BorrowInline(
+					static (sb, callerMethod) =>
+					{
+						sb.Append(callerMethod.Name);
+						if (callerMethod.SubMethod is {} subMethod)
+						{
+							sb.Append('+').Append(subMethod);
+						}
+					}, callerMethod
+			);
 			/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
 			* From https://stackoverflow.com/a/35266094
 			* If the MemberInfo object is a global member
@@ -188,88 +133,79 @@ public sealed class CallerContextEnricher : ILogEventEnricher
 			* the returned DeclaringType will be null.
 			*/
 			callingTypeStr = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
-
-			stackTraceStr = trace.ToString();
+		}
+		else
+		{
+			StackFrame frame = new(offset, true);
+			callerMethod = EnhancedStackTrace.GetMethodDisplayString(frame.GetMethod()!); //Method shouldn't be null because FindOffset() skips null methods/types
+			fileName     = frame.GetFileName() ?? "<Unknown File>";
+			lineNumber   = frame.GetFileLineNumber();
+			columnNumber = frame.GetFileColumnNumber();
+			callerType   = callerMethod.DeclaringType;
+			callingMethodStr = StringBuilderPool.BorrowInline(
+					static (sb, callerMethod) =>
+					{
+						sb.Append(callerMethod.Name);
+						if (callerMethod.SubMethod is {} subMethod)
+						{
+							sb.Append('+').Append(subMethod);
+						}
+					}, callerMethod
+			);
+			/* If the type is null it belongs to a module not a class (I guess a 'global' function?)
+			* From https://stackoverflow.com/a/35266094
+			* If the MemberInfo object is a global member
+			* (that is, if it was obtained from the Module.GetMethods method, which returns global methods on a module),
+			* the returned DeclaringType will be null.
+			*/
+			callingTypeStr = callerType is null ? "<Module>" : StringBuilderPool.BorrowInline(static (sb, callerType) => sb.AppendTypeDisplayName(callerType, false), callerType);
 		}
 
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingTypeNameProp,     callingTypeStr)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodNameProp,   callingMethodStr)!);
-		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(StackTraceProp,          stackTraceStr)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodFileProp,   fileName)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodLineProp,   lineNumber)!);
 		logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(CallingMethodColumnProp, columnNumber)!);
 	}
 
-	/// <summary>Returns an enhanced stack trace, skipping serilog methods</summary>
-	private static EnhancedStackTrace? GetStackTrace()
+	/// <summary>Finds the number of stack frames that need to be skipped to get to the caller</summary>
+	[MethodImpl(MethodImplOptions.NoInlining)] //Can't inline since we're working with StackTraces here
+	private static int FindOffsetToCaller()
 	{
-		/*
-	* Example output:
-	* This >>>>		at void LibArarem.Core.Logging.Enrichers.CallerContextEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-	* 					at void Serilog.Core.Enrichers.SafeAggregateEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
-	* 					at void Serilog.Core.Logger.Dispatch(LogEvent logEvent)
-	* 					at void Serilog.Core.Logger.Write(LogEventLevel level, Exception exception, string messageTemplate, params object[] propertyValues)
-	* 					at void Serilog.Core.Logger.Write(LogEventLevel level, string messageTemplate, params object[] propertyValues)
-	* 					at void Serilog.Core.Logger.Write(LogEventLevel level, string messageTemplate)
-	* 					at void Serilog.Log.Write(LogEventLevel level, string messageTemplate)
-	* 					at void Serilog.Log.Information(string messageTemplate)
-	* Logged >>>		at void Testing.TestBehaviour.Test()
-	*
-	* Here we can see we need to skip 9 frames to avoid including the serilog stuff.
-	*/
-
-		//Find how far we need to go to skip all the serilog methods
-		StackFrame[] frames = new StackTrace(false).GetFrames();
-
-		bool gotToSerilogYet = false;
-		int  skip            = 0;
-		//Yes this is very complicated but I don't know how to make it easier to read
-		//I essentially just used a truth table and then imported it as if/else statements
-		//Of course, I forgot to save the table but hey, it works!
-		//Also ignore the commented duplicate if/else statements, they're just how it was before resharper did it's "truth analysis" and got rid of the impossible branches
+		StackFrame[] frames          = new StackTrace(false).GetFrames();
+		bool         gotToSerilogYet = false;
 		for (int i = 0; i < frames.Length; i++)
 		{
-			MethodBase? method = frames[i].GetMethod();
+			StackFrame  frame        = frames[i];
+			MethodBase? callerMethod = frame.GetMethod();
 
-			//If the method, type or name is null, the expression is false
-			bool isSerilog = method?.DeclaringType?.Namespace?.StartsWith("Serilog") ?? false;
+			if (callerMethod is null) continue; //Invalid (nonexistent) method
+			Type? callerType = callerMethod.DeclaringType;
+			if (callerType is null) continue; //Invalid (nonexistent) type
 
-			if (method!.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) continue; //Skip if hidden
+			//Skip if method or type is hidden in stacktraces
+			bool hidden = StackTraceHiddenMethods.GetOrAdd(callerMethod, static method => method.GetCustomAttribute<StackTraceHiddenAttribute>() is not null) ||
+						  StackTraceHiddenTypes.GetOrAdd(callerType, static type => type.GetCustomAttribute<StackTraceHiddenAttribute>() is not null);
+			if (hidden) continue;
 
-			//E.g. "at void Core.Logger.ReinitialiseLogger()+GetStackTrace()"
-			// ReSharper disable once ConvertIfStatementToSwitchStatement
-			if (!gotToSerilogYet && !isSerilog)
-				continue;
-			//E.g. "at void Serilog.Enrichers.FunctionEnricher.Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)"
-			// if (!gotToSerilogYet && isSerilog)
-			if (!gotToSerilogYet)
+			bool isSerilog = callerType.Namespace?.StartsWith("Serilog") ?? false;
+			switch (gotToSerilogYet)
 			{
-				gotToSerilogYet = true;
-				continue;
+				case false when !isSerilog:
+					continue;
+				case false:
+					gotToSerilogYet = true;
+					continue;
 			}
 
-			//E.g. "at void Serilog.Core.Logger.Dispatch(LogEvent logEvent)"
-			// if (gotToSerilogYet && isSerilog) continue;
 			if (isSerilog) continue;
 
-			//E.g. "at void Testing.TestBehaviour.Test()"
-			// if (gotToSerilogYet && !isSerilog)
 			//Finally found the right number
-			skip = i;
-			break;
+			//https://youtu.be/Vy7RaQUmOzE?t=203
+			return i -1; //Subtract one to account for the fact that we're calculating the offset from this method
 		}
 
-		try
-		{
-			//Tis a shame that one cannot pass in the frames on their own, only create a new trace
-			return new EnhancedStackTrace(new StackTrace(skip, true));
-		}
-		catch (Exception e)
-		{
-			SelfLog.WriteLine("Error creating EnhancedStackTrace: {0}", e);
-			return null;
-		}
+		return 0;
+		// throw new InvalidOperationException("Should not have reached here");
 	}
-
-#endregion
 }
